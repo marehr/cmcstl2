@@ -29,15 +29,20 @@
 //
 STL2_OPEN_NAMESPACE {
 	struct nullopt_t {
-		struct secret_tag {};
-		explicit constexpr nullopt_t(secret_tag) {}
+		struct __secret_tag {};
+		explicit constexpr nullopt_t(__secret_tag) {}
 	};
+
+#if defined(__cpp_inline_variables)
+	inline constexpr nullopt_t nullopt{nullopt_t::__secret_tag{}};
+#else
 	template <class>
-	extern constexpr nullopt_t __nullopt{nullopt_t::secret_tag{}};
+	extern constexpr nullopt_t __nullopt{nullopt_t::__secret_tag{}};
 
 	namespace {
 		constexpr const nullopt_t& nullopt = __nullopt<void>;
 	}
+#endif
 
 	class bad_optional_access : public std::logic_error {
 	public:
@@ -51,7 +56,7 @@ STL2_OPEN_NAMESPACE {
 
 	namespace __optional {
 		template <class = void>
-		[[noreturn]] bool bad_access() {
+		[[noreturn]] void bad_access() {
 			throw bad_optional_access{};
 		}
 
@@ -125,17 +130,7 @@ STL2_OPEN_NAMESPACE {
 		template <class T>
 		class storage_construct_layer : public storage_destruct_layer<T> {
 		public:
-#if 0 //STL2_WORKAROUND_GCC_79143
-			storage_construct_layer() = default;
-			template <class... Args>
-			requires models::Constructible<T, Args...>
-			constexpr explicit storage_construct_layer(in_place_t, Args&&... args)
-			noexcept(std::is_nothrow_constructible<T, Args...>::value)
-			: storage_destruct_layer<T>(in_place, std::forward<Args>(args)...)
-			{}
-#else  // STL2_WORKAROUND_GCC_79143
 			using storage_destruct_layer<T>::storage_destruct_layer;
-#endif // STL2_WORKAROUND_GCC_79143
 
 			template <class... Args>
 			requires Constructible<T, Args...>()
@@ -178,16 +173,7 @@ STL2_OPEN_NAMESPACE {
 		template <class T>
 		class smf_layer : public storage_construct_layer<T> {
 		public:
-#if 0 //STL2_WORKAROUND_GCC_79143
-			template <class... Args>
-			requires models::Constructible<T, Args...>
-			constexpr explicit smf_layer(in_place_t, Args&&... args)
-			noexcept(std::is_nothrow_constructible<T, Args...>::value)
-			: storage_construct_layer<T>(in_place, std::forward<Args>(args)...)
-			{}
-#else  // STL2_WORKAROUND_GCC_79143
 			using storage_construct_layer<T>::storage_construct_layer;
-#endif // STL2_WORKAROUND_GCC_79143
 
 			smf_layer() = default;
 
@@ -238,18 +224,7 @@ STL2_OPEN_NAMESPACE {
 		template <class T>
 		requires std::is_trivially_copyable<T>::value
 		struct smf_layer<T> : storage_construct_layer<T> {
-#if 0 //STL2_WORKAROUND_GCC_79143
-			smf_layer() = default;
-
-			template <class... Args>
-			requires models::Constructible<T, Args...>
-			constexpr explicit smf_layer(in_place_t, Args&&... args)
-			noexcept(std::is_nothrow_constructible<T, Args...>::value)
-			: storage_construct_layer<T>(in_place, std::forward<Args>(args)...)
-			{}
-#else  // STL2_WORKAROUND_GCC_79143
 			using storage_construct_layer<T>::storage_construct_layer;
-#endif // STL2_WORKAROUND_GCC_79143
 		};
 	} // namespace __optional
 

@@ -53,21 +53,18 @@ STL2_OPEN_NAMESPACE {
 		//
 		template <std::size_t I, Variant V, _IsNot<is_void> T>
 		constexpr auto&& v_access::raw_get(in_place_index_t<I> i, V&& v) noexcept {
-			STL2_EXPECT(I == v.index());
+			STL2_EXPECT(v.index() == I);
 			return st_access::raw_get(i, __stl2::forward<V>(v).storage_);
 		}
 
 		template <std::size_t I, Variant V, _IsNot<is_void> T>
 		constexpr auto&& v_access::cooked_get(in_place_index_t<I> i, V&& v) noexcept {
-			STL2_EXPECT(I == v.index());
+			STL2_EXPECT(v.index() == I);
 			return cook<T>(v_access::raw_get(i, __stl2::forward<V>(v)));
 		}
 
-		// "inline" is here for the ODR; we do not actually
-		// want bad_access to be inlined into get. Having it
-		// be a separate function results in better generated
-		// code.
-		[[noreturn]] inline bool bad_access() {
+		template <class=void>
+		[[noreturn]] void bad_access() {
 			throw bad_variant_access{};
 		}
 
@@ -86,9 +83,7 @@ STL2_OPEN_NAMESPACE {
 			_IsNot<meta::at_c<VariantTypes<V>, I>, is_void>
 		constexpr auto&& get(V&& v) {
 			STL2_EXPECT(v.valid());
-			// Odd syntax here to avoid
-			// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67371
-			v.index() == I || bad_access();
+			if (v.index() != I) bad_access();
 			return v_access::cooked_get(in_place_index<I>, __stl2::forward<V>(v));
 		}
 
@@ -163,9 +158,6 @@ STL2_OPEN_NAMESPACE {
 		protected:
 			using storage_t = storage<element_t<Ts>...>;
 			using index_t =
-		#if 0
-				std::size_t;
-		#else
 				meta::if_c<
 					(sizeof...(Ts) <= std::numeric_limits<std::int_least8_t>::max()),
 					std::int_least8_t,
@@ -176,7 +168,6 @@ STL2_OPEN_NAMESPACE {
 							(sizeof...(Ts) <= std::numeric_limits<std::int_least32_t>::max()),
 							std::int_least32_t,
 							std::size_t>>>;
-		#endif
 			static_assert(sizeof...(Ts) - is_unsigned<index_t>::value <
 				std::numeric_limits<index_t>::max());
 			static constexpr auto invalid_index = index_t(-1);
@@ -434,14 +425,7 @@ STL2_OPEN_NAMESPACE {
 			destruct_base& operator=(destruct_base&&) & = default;
 			destruct_base& operator=(const destruct_base&) & = default;
 
-#if 0 //STL2_WORKAROUND_GCC_79143
-			template<class... Args>
-			requires models::Constructible<base_t, Args...>
-			constexpr destruct_base(Args&&... args)
-			: base_t{std::forward<Args>(args)...} {}
-#else  // STL2_WORKAROUND_GCC_79143
 			using base_t::base_t;
-#endif // STL2_WORKAROUND_GCC_79143
 		};
 
 		template <class...Ts>
@@ -449,14 +433,7 @@ STL2_OPEN_NAMESPACE {
 		class destruct_base<Ts...> : public base<Ts...> {
 			using base_t = base<Ts...>;
 		public:
-#if 0 //STL2_WORKAROUND_GCC_79143
-			template<class... Args>
-			requires models::Constructible<base_t, Args...>
-			constexpr destruct_base(Args&&... args)
-			: base_t{std::forward<Args>(args)...} {}
-#else  // STL2_WORKAROUND_GCC_79143
 			using base_t::base_t;
-#endif // STL2_WORKAROUND_GCC_79143
 		};
 
 		///////////////////////////////////////////////////////////////////////////
@@ -472,14 +449,7 @@ STL2_OPEN_NAMESPACE {
 			move_base& operator=(move_base&&) & = default;
 			move_base& operator=(const move_base&) & = default;
 
-#if 0 //STL2_WORKAROUND_GCC_79143
-			template<class... Args>
-			requires models::Constructible<base_t, Args...>
-			constexpr move_base(Args&&... args)
-			: base_t{std::forward<Args>(args)...} {}
-#else  // STL2_WORKAROUND_GCC_79143
 			using base_t::base_t;
-#endif // STL2_WORKAROUND_GCC_79143
 		};
 
 		template <class...Ts>
@@ -497,14 +467,7 @@ STL2_OPEN_NAMESPACE {
 			move_base& operator=(move_base&&) & = default;
 			move_base& operator=(const move_base&) & = default;
 
-#if 0 //STL2_WORKAROUND_GCC_79143
-			template<class... Args>
-			requires models::Constructible<base_t, Args...>
-			constexpr move_base(Args&&... args)
-			: base_t{std::forward<Args>(args)...} {}
-#else  // STL2_WORKAROUND_GCC_79143
 			using base_t::base_t;
-#endif // STL2_WORKAROUND_GCC_79143
 		};
 
 		template <class...Ts>
@@ -514,14 +477,7 @@ STL2_OPEN_NAMESPACE {
 		class move_base<Ts...> : public destruct_base<Ts...> {
 			using base_t = destruct_base<Ts...>;
 		public:
-#if 0 //STL2_WORKAROUND_GCC_79143
-			template<class... Args>
-			requires models::Constructible<base_t, Args...>
-			constexpr move_base(Args&&... args)
-			: base_t{std::forward<Args>(args)...} {}
-#else  // STL2_WORKAROUND_GCC_79143
 			using base_t::base_t;
-#endif // STL2_WORKAROUND_GCC_79143
 		};
 
 		///////////////////////////////////////////////////////////////////////////
@@ -537,14 +493,7 @@ STL2_OPEN_NAMESPACE {
 			move_assign_base& operator=(move_assign_base&&) & = delete;
 			move_assign_base& operator=(const move_assign_base&) & = default;
 
-#if 0 //STL2_WORKAROUND_GCC_79143
-			template<class... Args>
-			requires models::Constructible<base_t, Args...>
-			constexpr move_assign_base(Args&&... args)
-			: base_t{std::forward<Args>(args)...} {}
-#else  // STL2_WORKAROUND_GCC_79143
 			using base_t::base_t;
-#endif // STL2_WORKAROUND_GCC_79143
 		};
 
 		template <class...Ts>
@@ -567,14 +516,7 @@ STL2_OPEN_NAMESPACE {
 			}
 			move_assign_base& operator=(const move_assign_base&) & = default;
 
-#if 0 //STL2_WORKAROUND_GCC_79143
-			template<class... Args>
-			requires models::Constructible<base_t, Args...>
-			constexpr move_assign_base(Args&&... args)
-			: base_t{std::forward<Args>(args)...} {}
-#else  // STL2_WORKAROUND_GCC_79143
 			using base_t::base_t;
-#endif // STL2_WORKAROUND_GCC_79143
 		};
 
 		template <class...Ts>
@@ -584,14 +526,7 @@ STL2_OPEN_NAMESPACE {
 		class move_assign_base<Ts...> : public move_base<Ts...> {
 			using base_t = move_base<Ts...>;
 		public:
-#if 0 //STL2_WORKAROUND_GCC_79143
-			template<class... Args>
-			requires models::Constructible<base_t, Args...>
-			constexpr move_assign_base(Args&&... args)
-			: base_t{std::forward<Args>(args)...} {}
-#else  // STL2_WORKAROUND_GCC_79143
 			using base_t::base_t;
-#endif // STL2_WORKAROUND_GCC_79143
 		};
 
 		///////////////////////////////////////////////////////////////////////////
@@ -607,14 +542,7 @@ STL2_OPEN_NAMESPACE {
 			copy_base& operator=(copy_base&&) & = default;
 			copy_base& operator=(const copy_base&) & = default;
 
-#if 0 //STL2_WORKAROUND_GCC_79143
-			template<class... Args>
-			requires models::Constructible<base_t, Args...>
-			constexpr copy_base(Args&&... args)
-			: base_t{std::forward<Args>(args)...} {}
-#else  // STL2_WORKAROUND_GCC_79143
 			using base_t::base_t;
-#endif // STL2_WORKAROUND_GCC_79143
 		};
 
 		template <class...Ts>
@@ -632,14 +560,7 @@ STL2_OPEN_NAMESPACE {
 			copy_base& operator=(copy_base&&) & = default;
 			copy_base& operator=(const copy_base&) & = default;
 
-#if 0 //STL2_WORKAROUND_GCC_79143
-			template<class... Args>
-			requires models::Constructible<base_t, Args...>
-			constexpr copy_base(Args&&... args)
-			: base_t{std::forward<Args>(args)...} {}
-#else  // STL2_WORKAROUND_GCC_79143
 			using base_t::base_t;
-#endif // STL2_WORKAROUND_GCC_79143
 		};
 
 		template <class...Ts>
@@ -649,14 +570,7 @@ STL2_OPEN_NAMESPACE {
 		class copy_base<Ts...> : public move_assign_base<Ts...> {
 			using base_t = move_assign_base<Ts...>;
 		public:
-#if 0 //STL2_WORKAROUND_GCC_79143
-			template<class... Args>
-			requires models::Constructible<base_t, Args...>
-			constexpr copy_base(Args&&... args)
-			: base_t{std::forward<Args>(args)...} {}
-#else  // STL2_WORKAROUND_GCC_79143
 			using base_t::base_t;
-#endif // STL2_WORKAROUND_GCC_79143
 		};
 
 		///////////////////////////////////////////////////////////////////////////
@@ -672,14 +586,7 @@ STL2_OPEN_NAMESPACE {
 			copy_assign_base& operator=(copy_assign_base&&) & = default;
 			copy_assign_base& operator=(const copy_assign_base&) & = delete;
 
-#if 0 //STL2_WORKAROUND_GCC_79143
-			template<class... Args>
-			requires models::Constructible<base_t, Args...>
-			constexpr copy_assign_base(Args&&... args)
-			: base_t{std::forward<Args>(args)...} {}
-#else  // STL2_WORKAROUND_GCC_79143
 			using base_t::base_t;
-#endif // STL2_WORKAROUND_GCC_79143
 		};
 
 		template <class...Ts>
@@ -702,14 +609,7 @@ STL2_OPEN_NAMESPACE {
 				return *this;
 			}
 
-#if 0 //STL2_WORKAROUND_GCC_79143
-			template<class... Args>
-			requires models::Constructible<base_t, Args...>
-			constexpr copy_assign_base(Args&&... args)
-			: base_t{std::forward<Args>(args)...} {}
-#else  // STL2_WORKAROUND_GCC_79143
 			using base_t::base_t;
-#endif // STL2_WORKAROUND_GCC_79143
 		};
 
 		template <class...Ts>
@@ -719,14 +619,7 @@ STL2_OPEN_NAMESPACE {
 		class copy_assign_base<Ts...> : public copy_base<Ts...> {
 			using base_t = copy_base<Ts...>;
 		public:
-#if 0 //STL2_WORKAROUND_GCC_79143
-			template<class... Args>
-			requires models::Constructible<base_t, Args...>
-			constexpr copy_assign_base(Args&&... args)
-			: base_t{std::forward<Args>(args)...} {}
-#else  // STL2_WORKAROUND_GCC_79143
 			using base_t::base_t;
-#endif // STL2_WORKAROUND_GCC_79143
 		};
 	} // namespace __variant
 
@@ -776,25 +669,7 @@ STL2_OPEN_NAMESPACE {
 
 	public:
 		using types = meta::list<Ts...>;
-#if 0 //STL2_WORKAROUND_GCC_79143
-		template <class First>
-		requires
-			!models::Same<variant, std::decay_t<First>> &&
-			models::Constructible<base_t, First> &&
-			models::ConvertibleTo<First, base_t>
-		constexpr variant(First&& f)
-		noexcept(std::is_nothrow_constructible<base_t, First>::value)
-		: base_t(std::forward<First>(f)) {}
-		template <class First, class... Rest>
-		requires
-			!models::Same<variant, decay_t<First>> &&
-			models::Constructible<base_t, First, Rest...>
-		constexpr explicit variant(First&& f, Rest&&...r)
-		noexcept(std::is_nothrow_constructible<base_t, First, Rest...>::value)
-		: base_t(__stl2::forward<First>(f), __stl2::forward<Rest>(r)...) {}
-#else  // STL2_WORKAROUND_GCC_79143
 		using base_t::base_t;
-#endif // STL2_WORKAROUND_GCC_79143
 
 		variant() = default;
 		template <std::size_t I, class E, class...Args, _IsNot<is_reference> T = meta::at_c<types, I>>
