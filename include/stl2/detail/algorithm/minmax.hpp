@@ -83,10 +83,8 @@ STL2_OPEN_NAMESPACE {
 		}
 	}
 
-	template <class T, class Comp = less<>, class Proj = identity>
-	requires
-		IndirectStrictWeakOrder<
-			Comp, projected<const T*, Proj>>()
+	template <class T, class Proj = identity,
+		IndirectStrictWeakOrder<projected<const T*, Proj>> Comp = less<>>
 	constexpr tagged_pair<tag::min(const T&), tag::max(const T&)>
 	minmax(const T& a, const T& b, Comp comp = Comp{}, Proj proj = Proj{})
 	{
@@ -97,24 +95,21 @@ STL2_OPEN_NAMESPACE {
 		}
 	}
 
-	template <InputRange Rng, class Comp = less<>, class Proj = identity>
+	template <InputRange Rng, class Proj = identity,
+		IndirectStrictWeakOrder<projected<iterator_t<Rng>, Proj>> Comp = less<>>
 	requires
-		Copyable<value_type_t<iterator_t<Rng>>>() &&
-		IndirectStrictWeakOrder<
-			Comp, projected<iterator_t<Rng>, Proj>>()
+		Copyable<value_type_t<iterator_t<Rng>>>()
 	STL2_CONSTEXPR_EXT tagged_pair<tag::min(value_type_t<iterator_t<Rng>>),
-		tag::max(value_type_t<iterator_t<Rng>>)>
+											tag::max(value_type_t<iterator_t<Rng>>)>
 	minmax(Rng&& rng, Comp comp = Comp{}, Proj proj = Proj{})
 	{
 		return __minmax::impl(rng, __stl2::ref(comp), __stl2::ref(proj));
 	}
 
-	template <Copyable T, class Comp = less<>, class Proj = identity>
-	requires
-		IndirectStrictWeakOrder<
-			Comp, projected<const T*, Proj>>()
+	template <Copyable T, class Proj = identity,
+		IndirectStrictWeakOrder<projected<const T*, Proj>> Comp = less<>>
 	constexpr tagged_pair<tag::min(T), tag::max(T)>
-	minmax(std::initializer_list<T>&& rng, Comp comp = Comp{}, Proj proj = Proj{})
+	minmax(initializer_list<T> rng, Comp comp = Comp{}, Proj proj = Proj{})
 	{
 		return __minmax::impl(rng, __stl2::ref(comp), __stl2::ref(proj));
 	}

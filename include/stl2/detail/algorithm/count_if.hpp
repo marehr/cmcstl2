@@ -21,10 +21,8 @@
 // count_if [alg.count]
 //
 STL2_OPEN_NAMESPACE {
-	template <InputIterator I, Sentinel<I> S, class Pred, class Proj = identity>
-	requires
-		IndirectPredicate<
-			Pred, projected<I, Proj>>()
+	template <InputIterator I, Sentinel<I> S, class Proj = identity,
+		IndirectPredicate<projected<I, Proj>> Pred>
 	difference_type_t<I> count_if(I first, S last, Pred pred, Proj proj = Proj{})
 	{
 		auto n = difference_type_t<I>{0};
@@ -36,10 +34,8 @@ STL2_OPEN_NAMESPACE {
 		return n;
 	}
 
-	template <InputRange Rng, class Pred, class Proj = identity>
-	requires
-		IndirectPredicate<
-			Pred, projected<iterator_t<Rng>, Proj>>()
+	template <InputRange Rng, class Proj = identity,
+		IndirectPredicate<projected<iterator_t<Rng>, Proj>> Pred>
 	difference_type_t<iterator_t<Rng>> count_if(Rng&& rng, Pred pred, Proj proj = Proj{})
 	{
 		return __stl2::count_if(__stl2::begin(rng), __stl2::end(rng),

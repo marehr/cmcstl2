@@ -21,10 +21,8 @@
 // find_if [alg.find]
 //
 STL2_OPEN_NAMESPACE {
-	template <InputIterator I, Sentinel<I> S, class Pred, class Proj = identity>
-	requires
-		IndirectPredicate<
-			Pred, projected<I, Proj>>()
+	template <InputIterator I, Sentinel<I> S, class Proj = identity,
+		IndirectPredicate<projected<I, Proj>> Pred>
 	I find_if(I first, S last, Pred pred, Proj proj = Proj{})
 	{
 		for (; first != last; ++first) {
@@ -35,10 +33,8 @@ STL2_OPEN_NAMESPACE {
 		return first;
 	}
 
-	template <InputRange Rng, class Pred, class Proj = identity>
-	requires
-		IndirectPredicate<
-			Pred, projected<iterator_t<Rng>, Proj>>()
+	template <InputRange Rng, class Proj = identity,
+		IndirectPredicate<projected<iterator_t<Rng>, Proj>> Pred>
 	safe_iterator_t<Rng>
 	find_if(Rng&& rng, Pred pred, Proj proj = Proj{})
 	{

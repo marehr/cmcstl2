@@ -34,13 +34,13 @@ STL2_OPEN_NAMESPACE {
 
 	template <InputRange Rng, class O>
 	requires
-		WeaklyIncrementable<__f<O>>() &&
-		IndirectlyCopyable<iterator_t<Rng>, __f<O>>()
-	tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(__f<O>)>
-	copy(Rng&& rng, O&& result)
+		WeaklyIncrementable<O>() &&
+		IndirectlyCopyable<iterator_t<Rng>, O>()
+	tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
+	copy(Rng&& rng, O result)
 	{
 		return __stl2::copy(__stl2::begin(rng), __stl2::end(rng),
-												__stl2::forward<O>(result));
+												__stl2::move(result));
 	}
 
 	// Extension: two-range copy

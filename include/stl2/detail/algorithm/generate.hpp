@@ -20,10 +20,7 @@
 // generate [alg.generate]
 //
 STL2_OPEN_NAMESPACE {
-	template <class F, Iterator O, Sentinel<O> S>
-	requires
-		Invocable<F&>() &&
-		Writable<O, result_of_t<F&()>>()
+	template <Invocable F, OutputIterator<result_of_t<F&()>> O, Sentinel<O> S>
 	O generate(O first, S last, F gen)
 	{
 		for (; first != last; ++first) {
@@ -32,10 +29,7 @@ STL2_OPEN_NAMESPACE {
 		return first;
 	}
 
-	template <class Rng, class F>
-	requires
-		Invocable<F&>() &&
-		OutputRange<Rng, result_of_t<F&()>>()
+	template <Invocable F, OutputRange<result_of_t<F&()>> Rng>
 	safe_iterator_t<Rng>
 	generate(Rng&& rng, F gen)
 	{

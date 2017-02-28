@@ -22,21 +22,16 @@
 // is_sorted [is.sorted]
 //
 STL2_OPEN_NAMESPACE {
-	template <ForwardIterator I, Sentinel<I> S, class Comp = less<>,
-		class Proj = identity>
-	requires
-		IndirectStrictWeakOrder<
-			Comp, projected<I, Proj>>()
+	template <ForwardIterator I, Sentinel<I> S, class Proj = identity,
+		IndirectStrictWeakOrder<projected<I, Proj>> Comp = less<>>
 	bool is_sorted(I first, S last, Comp comp = Comp{}, Proj proj = Proj{})
 	{
 		return last == __stl2::is_sorted_until(__stl2::move(first), last,
 			__stl2::ref(comp), __stl2::ref(proj));
 	}
 
-	template <ForwardRange Rng, class Comp = less<>, class Proj = identity>
-	requires
-		IndirectStrictWeakOrder<
-			Comp, projected<iterator_t<Rng>, Proj>>()
+	template <ForwardRange Rng, class Proj = identity,
+		IndirectStrictWeakOrder<projected<iterator_t<Rng>, Proj>> Comp = less<>>
 	bool is_sorted(Rng&& rng, Comp comp = Comp{}, Proj proj = Proj{})
 	{
 		return __stl2::end(rng) ==

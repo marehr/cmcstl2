@@ -22,11 +22,9 @@
 //
 STL2_OPEN_NAMESPACE {
 	template <InputIterator I1, Sentinel<I1> S1,
-		InputIterator I2, Sentinel<I2> S2, class Comp = less<>,
-		class Proj1 = identity, class Proj2 = identity>
-	requires
-		IndirectStrictWeakOrder<
-			Comp, projected<I1, Proj1>, projected<I2, Proj2>>()
+		InputIterator I2, Sentinel<I2> S2,
+		class Proj1 = identity, class Proj2 = identity,
+		IndirectStrictWeakOrder<projected<I1, Proj1>, projected<I2, Proj2>> Comp = less<>>
 	bool includes(I1 first1, S1 last1, I2 first2, S2 last2, Comp comp = Comp{},
 		Proj1 proj1 = Proj1{}, Proj2 proj2 = Proj2{})
 	{
@@ -47,12 +45,10 @@ STL2_OPEN_NAMESPACE {
 		}
 	}
 
-	template <InputRange Rng1, InputRange Rng2, class Comp = less<>,
-		class Proj1 = identity, class Proj2 = identity>
-	requires
-		IndirectStrictWeakOrder<Comp,
-			projected<iterator_t<Rng1>, Proj1>,
-			projected<iterator_t<Rng2>, Proj2>>()
+	template <InputRange Rng1, InputRange Rng2,
+		class Proj1 = identity, class Proj2 = identity,
+		IndirectStrictWeakOrder<projected<iterator_t<Rng1>, Proj1>,
+										projected<iterator_t<Rng2>, Proj2>> Comp = less<>>
 	bool includes(Rng1&& rng1, Rng2&& rng2, Comp comp = Comp{},
 		Proj1 proj1 = Proj1{}, Proj2 proj2 = Proj2{})
 	{

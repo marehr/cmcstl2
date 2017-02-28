@@ -23,12 +23,10 @@
 // copy_if [alg.copy]
 //
 STL2_OPEN_NAMESPACE {
-	template <InputIterator I, Sentinel<I> S, WeaklyIncrementable O,
-		class Pred, class Proj = identity>
+	template <InputIterator I, Sentinel<I> S, WeaklyIncrementable O, class Proj = identity,
+		IndirectPredicate<projected<I, Proj>> Pred>
 	requires
-		IndirectlyCopyable<I, O>() &&
-		IndirectPredicate<
-			Pred, projected<I, Proj>>()
+		IndirectlyCopyable<I, O>()
 	tagged_pair<tag::in(I), tag::out(O)>
 	copy_if(I first, S last, O result, Pred pred, Proj proj = Proj{})
 	{
@@ -43,17 +41,15 @@ STL2_OPEN_NAMESPACE {
 		return {__stl2::move(first), __stl2::move(result)};
 	}
 
-	template <InputRange Rng, class O, class Pred, class Proj = identity>
+	template <InputRange Rng, WeaklyIncrementable O, class Proj = identity,
+		IndirectPredicate<projected<iterator_t<Rng>, Proj>> Pred>
 	requires
-		WeaklyIncrementable<__f<O>>() &&
-		IndirectPredicate<
-			Pred, projected<iterator_t<Rng>, Proj>>() &&
-		IndirectlyCopyable<iterator_t<Rng>, __f<O>>()
-	tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(__f<O>)>
-	copy_if(Rng&& rng, O&& result, Pred pred, Proj proj = Proj{})
+		IndirectlyCopyable<iterator_t<Rng>, O>()
+	tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(O)>
+	copy_if(Rng&& rng, O result, Pred pred, Proj proj = Proj{})
 	{
 		return __stl2::copy_if(__stl2::begin(rng), __stl2::end(rng),
-			__stl2::forward<O>(result), __stl2::ref(pred),
+			__stl2::move(result), __stl2::ref(pred),
 			__stl2::ref(proj));
 	}
 } STL2_CLOSE_NAMESPACE

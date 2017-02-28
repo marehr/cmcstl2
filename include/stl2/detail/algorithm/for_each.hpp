@@ -22,12 +22,10 @@
 // for_each [alg.for_each]
 //
 STL2_OPEN_NAMESPACE {
-	template <InputIterator I, Sentinel<I> S, class F, class Proj = identity>
-	requires
-		IndirectInvocable<
-			F, projected<I, Proj>>()
-	tagged_pair<tag::in(I), tag::fun(F)>
-	for_each(I first, S last, F fun, Proj proj = Proj{})
+	template <InputIterator I, Sentinel<I> S, class Proj = identity,
+		IndirectInvocable<projected<I, Proj>> Fun>
+	tagged_pair<tag::in(I), tag::fun(Fun)>
+	for_each(I first, S last, Fun fun, Proj proj = Proj{})
 	{
 		for (; first != last; ++first) {
 			static_cast<void>(__stl2::invoke(fun, __stl2::invoke(proj, *first)));
@@ -35,12 +33,10 @@ STL2_OPEN_NAMESPACE {
 		return {__stl2::move(first), __stl2::move(fun)};
 	}
 
-	template <InputRange Rng, class F, class Proj = identity>
-	requires
-		IndirectInvocable<
-			F, projected<iterator_t<Rng>, Proj>>()
-	tagged_pair<tag::in(safe_iterator_t<Rng>), tag::fun(F)>
-	for_each(Rng&& rng, F fun, Proj proj = Proj{})
+	template <InputRange Rng, class Proj = identity,
+		IndirectInvocable<projected<iterator_t<Rng>, Proj>> Fun>
+	tagged_pair<tag::in(safe_iterator_t<Rng>), tag::fun(Fun)>
+	for_each(Rng&& rng, Fun fun, Proj proj = Proj{})
 	{
 		return {__stl2::for_each(__stl2::begin(rng), __stl2::end(rng),
 			__stl2::ref(fun), __stl2::ref(proj)).in(), __stl2::move(fun)};

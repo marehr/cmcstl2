@@ -26,10 +26,8 @@
 STL2_OPEN_NAMESPACE {
 	template <ForwardIterator I1, Sentinel<I1> S1,
 		ForwardIterator I2, Sentinel<I2> S2,
-		class Pred = equal_to<>, class Proj = identity>
-	requires
-		IndirectRelation<
-			Pred, I2, projected<I1, Proj>>()
+		class Proj = identity,
+		IndirectRelation<I2, projected<I1, Proj>> Pred = equal_to<>>
 	I1 find_end(I1 first1, const S1 last1,
 		const I2 first2, const S2 last2,
 		Pred pred = Pred{}, Proj proj = Proj{})
@@ -58,10 +56,8 @@ STL2_OPEN_NAMESPACE {
 	}
 
 	template <BidirectionalIterator I1, BidirectionalIterator I2,
-		class Pred = equal_to<>, class Proj = identity>
-	requires
-		IndirectRelation<
-			Pred, I2, projected<I1, Proj>>()
+		class Proj = identity,
+		IndirectRelation<I2, projected<I1, Proj>> Pred = equal_to<>>
 	I1 find_end(I1 first1, I1 last1, I2 first2, I2 last2,
 		Pred pred = Pred{}, Proj proj = Proj{})
 	{
@@ -90,10 +86,8 @@ STL2_OPEN_NAMESPACE {
 	}
 
 	template <RandomAccessIterator I1, RandomAccessIterator I2,
-		class Pred = equal_to<>, class Proj = identity>
-	requires
-		IndirectRelation<
-			Pred, I2, projected<I1, Proj>>()
+		class Proj = identity,
+		IndirectRelation<I2, projected<I1, Proj>> Pred = equal_to<>>
 	I1 find_end(I1 first1, I1 last1, I2 first2, I2 last2,
 		Pred pred = Pred{}, Proj proj = Proj{})
 	{
@@ -121,10 +115,8 @@ STL2_OPEN_NAMESPACE {
 
 	template <BidirectionalIterator I1, Sentinel<I1> S1,
 		BidirectionalIterator I2, Sentinel<I2> S2,
-		class Pred = equal_to<>, class Proj = identity>
-	requires
-		IndirectRelation<
-			Pred, I2, projected<I1, Proj>>()
+		class Proj = identity,
+		IndirectRelation<I2, projected<I1, Proj>> Pred>
 	I1 find_end(I1 first1, S1 s1, I2 first2, S2 s2, Pred pred = Pred{}, Proj proj = Proj{})
 	{
 		auto last1 = __stl2::next(first1, __stl2::move(s1));
@@ -136,10 +128,8 @@ STL2_OPEN_NAMESPACE {
 	}
 
 	template <ForwardRange Rng1, ForwardRange Rng2,
-		class Pred = equal_to<>, class Proj = identity>
-	requires
-		IndirectRelation<
-			Pred, iterator_t<Rng2>, projected<iterator_t<Rng1>, Proj>>()
+		class Proj = identity,
+		IndirectRelation<iterator_t<Rng2>, projected<iterator_t<Rng1>, Proj>> Pred = equal_to<>>
 	safe_iterator_t<Rng1>
 	find_end(Rng1&& rng1, Rng2&& rng2, Pred pred = Pred{}, Proj proj = Proj{})
 	{

@@ -41,11 +41,11 @@ STL2_OPEN_NAMESPACE {
 		BidirectionalIterator<__f<I>>() &&
 		IndirectlyCopyable<iterator_t<Rng>, __f<I>>()
 	tagged_pair<tag::in(safe_iterator_t<Rng>), tag::out(__f<I>)>
-	copy_backward(Rng&& rng, I&& result)
+	copy_backward(Rng&& rng, I result)
 	{
 		return __stl2::copy_backward(
 			__stl2::begin(rng), __stl2::end(rng),
-			__stl2::forward<I>(result));
+			__stl2::move(result));
 	}
 } STL2_CLOSE_NAMESPACE
 

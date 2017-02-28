@@ -22,15 +22,11 @@
 // find_if_not [alg.find]
 //
 STL2_OPEN_NAMESPACE {
-	template <class I, class S, class Pred, class Proj = identity>
-	requires
-		InputIterator<__f<I>>() &&
-		Sentinel<__f<S>, __f<I>>() &&
-		IndirectPredicate<
-			Pred, projected<__f<I>, Proj>>()
-	__f<I> find_if_not(I&& first, S&& last, Pred pred, Proj proj = Proj{})
+	template <InputIterator I, Sentinel<I> S, class Proj = identity,
+		IndirectPredicate<projected<I, Proj>> Pred>
+	I find_if_not(I first, S last, Pred pred, Proj proj = Proj{})
 	{
-		return __stl2::find_if(__stl2::forward<I>(first), __stl2::forward<S>(last),
+		return __stl2::find_if(__stl2::move(first), __stl2::move(last),
 			__stl2::not_fn(__stl2::ref(pred)), __stl2::ref(proj));
 	}
 

@@ -21,11 +21,8 @@
 // is_sorted_until [is.sorted]
 //
 STL2_OPEN_NAMESPACE {
-	template <ForwardIterator I, Sentinel<I> S, class Comp = less<>,
-		class Proj = identity>
-	requires
-		IndirectStrictWeakOrder<
-			Comp, projected<I, Proj>>()
+	template <ForwardIterator I, Sentinel<I> S, class Proj = identity,
+		IndirectStrictWeakOrder<projected<I, Proj>> Comp = less<>>
 	I is_sorted_until(I first, S last, Comp comp = Comp{}, Proj proj = Proj{})
 	{
 		if (first != last) {
@@ -40,10 +37,8 @@ STL2_OPEN_NAMESPACE {
 
 	}
 
-	template <ForwardRange Rng, class Comp = less<>, class Proj = identity>
-	requires
-		IndirectStrictWeakOrder<
-			Comp, projected<iterator_t<Rng>, Proj>>()
+	template <ForwardRange Rng, class Proj = identity,
+		IndirectStrictWeakOrder<projected<iterator_t<Rng>, Proj>> Comp = less<>>
 	safe_iterator_t<Rng>
 	is_sorted_until(Rng&& rng, Comp comp = Comp{}, Proj proj = Proj{})
 	{

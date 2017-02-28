@@ -22,11 +22,8 @@
 // adjacent_find [alg.adjacent.find]
 //
 STL2_OPEN_NAMESPACE {
-	template <ForwardIterator I, Sentinel<I> S, class Pred = equal_to<>,
-		class Proj = identity>
-	requires
-		IndirectRelation<
-			Pred, projected<I, Proj>>()
+	template <ForwardIterator I, Sentinel<I> S, class Proj = identity,
+		IndirectRelation<projected<I, Proj>> Pred = equal_to<>>
 	I adjacent_find(I first, S last, Pred pred = Pred{}, Proj proj = Proj{})
 	{
 		if (first == last) {
@@ -42,10 +39,8 @@ STL2_OPEN_NAMESPACE {
 		return next;
 	}
 
-	template <ForwardRange Rng, class Pred = equal_to<>, class Proj = identity>
-	requires
-		IndirectRelation<
-			Pred, projected<iterator_t<Rng>, Proj>>()
+	template <ForwardRange Rng, class Proj = identity,
+		IndirectRelation<projected<iterator_t<Rng>, Proj>> Pred = equal_to<>>
 	safe_iterator_t<Rng>
 	adjacent_find(Rng&& rng, Pred pred = Pred{}, Proj proj = Proj{})
 	{

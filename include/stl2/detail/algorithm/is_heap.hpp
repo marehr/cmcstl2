@@ -33,20 +33,16 @@
 //
 STL2_OPEN_NAMESPACE {
 	template <RandomAccessIterator I, Sentinel<I> S,
-		class Comp = less<>, class Proj = identity>
-	requires
-		IndirectStrictWeakOrder<
-			Comp, projected<I, Proj>>()
+		class Proj = identity,
+		IndirectStrictWeakOrder<projected<I, Proj>> Comp = less<>>
 	bool is_heap(I first, S last, Comp comp = Comp{}, Proj proj = Proj{})
 	{
 		return last == __stl2::is_heap_until(__stl2::move(first), last,
 			__stl2::ref(comp), __stl2::ref(proj));
 	}
 
-	template <RandomAccessRange Rng, class Comp = less<>, class Proj = identity>
-	requires
-		IndirectStrictWeakOrder<
-			Comp, projected<iterator_t<Rng>, Proj>>()
+	template <RandomAccessRange Rng, class Proj = identity,
+		IndirectStrictWeakOrder<projected<iterator_t<Rng>, Proj>> Comp = less<>>
 	bool is_heap(Rng&& rng, Comp comp = Comp{}, Proj proj = Proj{})
 	{
 		return __stl2::end(rng) ==
