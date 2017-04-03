@@ -25,8 +25,9 @@ STL2_OPEN_NAMESPACE {
 	template <class T>
 	concept bool __addressable =
 		requires(T& t, const remove_reference_t<T>& ct) {
-			{ &t } -> Same<remove_reference_t<T>*>&&;
-			{ &ct } -> Same<const remove_reference_t<T>*>&&;
+			using reference_removed = remove_reference_t<T>;
+			{ &t } -> Same<reference_removed*>&&;
+			{ &ct } -> Same<const reference_removed*>&&;
 			// Axiom: &t == addressof(t)
 			// Axiom: &ct == addressof(ct)
 		};

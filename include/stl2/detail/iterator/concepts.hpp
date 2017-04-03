@@ -156,22 +156,24 @@ STL2_OPEN_NAMESPACE {
 	// See https://github.com/ericniebler/stl2/issues/239
 	//
 	template <class I>
-	concept bool Readable() {
-		return Movable<I>() && DefaultConstructible<I>() &&
+	concept bool Readable = Movable<I>() && DefaultConstructible<I>() &&
 			requires(const I& i) {
 				// Associated types
 				typename value_type_t<I>;
+				using val_type = value_type_t<I>;
 				typename reference_t<I>;
+				using reference = reference_t<I>;
 				typename rvalue_reference_t<I>;
+				using rvalue_reference = rvalue_reference_t<I>;
 				// Valid expressions
 				{ *i } -> auto&&;
 				{ __stl2::iter_move(i) } -> auto&&;
-			} &&
 			// Relationships between associated types
-			CommonReference<reference_t<I>, value_type_t<I>&>() &&
-			CommonReference<reference_t<I>, rvalue_reference_t<I>>() &&
-			CommonReference<rvalue_reference_t<I>, const value_type_t<I>&>();
-	}
+			requires CommonReference<reference, val_type&>();
+			requires CommonReference<reference, rvalue_reference>();
+			requires CommonReference<rvalue_reference, const val_type&>();
+		};
+	
 
 	namespace models {
 		template <class>
@@ -222,7 +224,7 @@ STL2_OPEN_NAMESPACE {
 	//
 	template <class In, class Out>
 	concept bool IndirectlyMovable() {
-		return Readable<In>() && Writable<Out, rvalue_reference_t<In>>();
+		return Readable<In> && Writable<Out, rvalue_reference_t<In>>();
 	}
 
 	namespace models {
@@ -243,13 +245,16 @@ STL2_OPEN_NAMESPACE {
 	// IndirectlyMovableStorable [commonalgoreq.indirectlymovable]
 	//
 	template <class In, class Out>
-	concept bool IndirectlyMovableStorable() {
-		return IndirectlyMovable<In, Out>() &&
-			Writable<Out, value_type_t<In>&&>() &&
-			Movable<value_type_t<In>>() &&
-			Constructible<value_type_t<In>, rvalue_reference_t<In>>() &&
-			Assignable<value_type_t<In>&, rvalue_reference_t<In>>();
-	}
+	concept bool IndirectlyMovableStorable = IndirectlyMovable<In, Out>() &&
+		requires {
+			using val_type = value_type_t<In>;
+			using rvalue_reference = rvalue_reference_t<In>;
+			Writable<Out, val_type&&>() &&
+			Movable<val_type>() &&
+			Constructible<val_type, rvalue_reference>() &&
+			Assignable<val_type&, rvalue_reference>();
+		};
+	
 
 	namespace models {
 		template <class, class>
@@ -273,7 +278,7 @@ STL2_OPEN_NAMESPACE {
 	//
 	template <class In, class Out>
 	concept bool IndirectlyCopyable() {
-		return Readable<In>() && Writable<Out, reference_t<In>>();
+		return Readable<In> && requires { using reference = reference_t<In>; requires Writable<Out, reference>(); };
 	}
 
 	namespace models {
@@ -289,10 +294,14 @@ STL2_OPEN_NAMESPACE {
 	template <class In, class Out>
 	concept bool IndirectlyCopyableStorable() {
 		return IndirectlyCopyable<In, Out>() &&
-			Writable<Out, const value_type_t<In>&>() &&
-			Copyable<value_type_t<In>>() &&
-			Constructible<value_type_t<In>, reference_t<In>>() &&
-			Assignable<value_type_t<In>&, reference_t<In>>();
+			requires {
+				using value_type = value_type_t<In>;
+				using reference = reference_t<In>;
+				requires Writable<Out, const value_type&>();
+				requires Copyable<value_type>();
+				requires Constructible<value_type, reference>();
+				requires Assignable<value_type&, reference>();
+			};
 	}
 
 	namespace models {
@@ -322,8 +331,11 @@ STL2_OPEN_NAMESPACE {
 		constexpr bool has_customization<R1, R2> = true;
 
 		template <class R1, class R2>
-		requires
-			Swappable<reference_t<R1>, reference_t<R2>>()
+		requires requires {
+			using reference1 = reference_t<R1>;
+			using reference2 = reference_t<R2>;
+			Swappable<reference1, reference2>();
+		}
 		constexpr void impl(R1&& r1, R2&& r2)
 		STL2_NOEXCEPT_RETURN(
 			__stl2::swap(*r1, *r2)
@@ -347,8 +359,8 @@ STL2_OPEN_NAMESPACE {
 		struct fn {
 			template <class R1, class R2>
 			requires
-				Readable<remove_reference_t<R1>>() &&
-				Readable<remove_reference_t<R2>>() &&
+				Readable<remove_reference_t<R1>> &&
+				Readable<remove_reference_t<R2>> &&
 				has_customization<R1, R2>
 			constexpr void operator()(R1&& r1, R2&& r2) const
 			STL2_NOEXCEPT_RETURN(
@@ -357,8 +369,8 @@ STL2_OPEN_NAMESPACE {
 
 			template <class R1, class R2>
 			requires
-				Readable<remove_reference_t<R1>>() &&
-				Readable<remove_reference_t<R2>>() &&
+				Readable<remove_reference_t<R1>> &&
+				Readable<remove_reference_t<R2>> &&
 				!has_customization<R1&, R2&> &&
 				requires(R1& r1, R2& r2) {
 					__iter_swap::impl(r1, r2);
@@ -589,7 +601,7 @@ STL2_OPEN_NAMESPACE {
 	template <class I>
 	concept bool InputIterator() {
 		return Iterator<I>() &&
-			Readable<I>() &&
+			Readable<I> &&
 			requires(I& i, const I& ci) {
 				typename iterator_category_t<I>;
 				DerivedFrom<iterator_category_t<I>, input_iterator_tag>();
