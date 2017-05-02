@@ -44,10 +44,10 @@ STL2_OPEN_NAMESPACE {
 	template <InputIterator I1, Sentinel<I1> S1, InputIterator I2, Sentinel<I2> S2,
 		  CopyConstructible T,
 		  typename Proj1 = identity, typename Proj2 = identity,
-		  IndirectRegularInvocable<projected<I1, Proj1>, projected<I2, Proj2>> Op2 = plus<>,
+		  IndirectRegularInvocable<projected<I1, Proj1>, projected<I2, Proj2>> Op2 = multiplies<>,
 		  RegularInvocable<T,
 			indirect_result_of_t<Op2&(projected<I1, Proj1>,
-						  projected<I2, Proj2>)>> Op1 = multiplies<>>
+						  projected<I2, Proj2>)>> Op1 = plus<>>
 	requires
 	   Assignable<T&, const T&>() &&
 	   Assignable<T&, result_of_t<Op1&(T,
