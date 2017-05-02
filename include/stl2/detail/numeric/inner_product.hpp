@@ -52,6 +52,8 @@ STL2_OPEN_NAMESPACE {
 	   Assignable<T&, const T&>() &&
 	   Assignable<T&, result_of_t<Op1&(T,
 		indirect_result_of_t<Op2&(projected<I1, Proj1>, projected<I2, Proj2>)>)>>()
+        T inner_product(I1 first1, S1 last1, I2 first2, S2 last2, T init, Op1 op1 = Op1{},
+		Op2 op2 = Op2{}, Proj1 proj1 = Proj1{}, Proj2 proj2 = Proj2{})
 	{
 		for (; first1 != last1 && first2 != last2; ++first1, (void)++first2) {
 			init = __stl2::invoke(op1, __stl2::move(init), __stl2::invoke(op2,
