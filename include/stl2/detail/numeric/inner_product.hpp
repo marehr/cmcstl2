@@ -41,14 +41,16 @@ STL2_OPEN_NAMESPACE {
 		return init;
 	}
 
-template <InputIterator I1, Sentinel<I1> S1, InputIterator I2, Sentinel<I2> S2,
-   CopyConstructible T,
-   typename Proj1 = identity, typename Proj2 = identity,
-   IndirectRegularInvocable<projected<I1, Proj1>, projected<I2, Proj2>> Op2 = plus<>,
-   RegularInvocable<T, indirect_result_of_t<Op2&(projected<I1, Proj1>, projected<I2, Proj2>)> Op1 = multiplies<>>
-requires
-   Assignable<T&, const T&>() &&
-   Assignable<T&, result_of_t<Op1&(T, indirect_result_of_t<Op2&(projected<I1, Proj1>, projected<I2, Proj2>)>()
+	template <InputIterator I1, Sentinel<I1> S1, InputIterator I2, Sentinel<I2> S2,
+		  CopyConstructible T,
+		  typename Proj1 = identity, typename Proj2 = identity,
+		  IndirectRegularInvocable<projected<I1, Proj1>, projected<I2, Proj2>> Op2 = plus<>,
+		  RegularInvocable<T,
+			indirect_result_of_t<Op2&(projected<I1, Proj1>,
+						  projected<I2, Proj2>)>> Op1 = multiplies<>>
+	requires
+	   Assignable<T&, const T&>() &&
+	   Assignable<T&, result_of_t<Op1&(T, indirect_result_of_t<Op2&(projected<I1, Proj1>, projected<I2, Proj2>)>()
 	{
 		for (; first1 != last1 && first2 != last2; ++first1, (void)++first2) {
 			init = __stl2::invoke(op1, __stl2::move(init), __stl2::invoke(op2,
