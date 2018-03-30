@@ -10,3 +10,4 @@
 # Project home: https://github.com/caseycarter/cmcstl2
 #
 add_stl2_test(action.concepts action.concepts concepts.cpp)
+add_stl2_test(action.insert action.insert insert.cpp)
