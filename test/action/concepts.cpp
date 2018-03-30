@@ -21,12 +21,12 @@ int main()
 
 	int rgi[6];
 	static_assert(ranges::Range<decltype(rgi)>);
-	static_assert(not ranges::SemiContainer<decltype(rgi)>);
+	static_assert(not ranges::ext::SemiContainer<decltype(rgi)>);
 
-	static_assert(ranges::SemiContainer<std::array<int, 6>>);
-	static_assert(not ranges::Container<std::array<int, 6>>);
+	static_assert(ranges::ext::SemiContainer<std::array<int, 6>>);
+	static_assert(not ranges::ext::Container<std::array<int, 6>>);
 
-	static_assert(ranges::Container<std::vector<int>>);
+	static_assert(ranges::ext::Container<std::vector<int>>);
 
 	// TODO(@cjdb, CaseyCarter/cmcstl2/#142) uncomment when resolved
 	//  static_assert(ranges::Container<std::vector<std::unique_ptr<int>>>);
