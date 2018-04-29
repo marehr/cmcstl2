@@ -56,17 +56,17 @@ namespace {
 
 		auto driver = [&test](const auto& in, auto& out) {
 			test(in, out, ranges::uninitialized_copy(in.begin(), in.end(), out.begin(), out.end()));
-			test(in, out, ranges::uninitialized_copy(in.cbegin(), in.cend(), out.cbegin(), out.cend()));
-			test(in, out, ranges::uninitialized_copy(in, out));
-			test(in, out, ranges::uninitialized_copy(in, static_cast<const raw_buffer<T>&>(out)));
+			// test(in, out, ranges::uninitialized_copy(in.cbegin(), in.cend(), out.cbegin(), out.cend()));
+			// test(in, out, ranges::uninitialized_copy(in, out));
+			// test(in, out, ranges::uninitialized_copy(in, static_cast<const raw_buffer<T>&>(out)));
 		};
 
 		// check range-based when distance(rng1) == distance(rng2)
 		driver(control, independent);
 
 		// check double range-based when distance(rng1) < distance(rng2)
-		// auto small = make_buffer<T>(1);
-		// driver(small, independent);
+		auto small = make_buffer<T>(1);
+		driver(small, independent);
 		// check double range-based when distance(rng1) < distance(rng2)
 		// driver(control, small);
 
