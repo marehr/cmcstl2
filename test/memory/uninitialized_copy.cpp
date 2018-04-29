@@ -65,8 +65,8 @@ namespace {
 		driver(control, independent);
 
 		// check double range-based when distance(rng1) < distance(rng2)
-		auto small = make_buffer<T>(1);
-		driver(small, independent);
+		// auto small = make_buffer<T>(1);
+		// driver(small, independent);
 		// check double range-based when distance(rng1) < distance(rng2)
 		// driver(control, small);
 
