@@ -22,14 +22,10 @@
 #include <stl2/detail/concepts/object.hpp>
 #include <stl2/detail/iostream/concepts.hpp>
 #include <stl2/detail/iterator/basic_iterator.hpp>
+#include <stl2/detail/iterator/default_sentinel.hpp>
 #include <stl2/detail/memory/addressof.hpp>
 
 STL2_OPEN_NAMESPACE {
-	///////////////////////////////////////////////////////////////////////////
-	// ostream_sentinel [Extension]
-	//
-	class ostream_sentinel {};
-
 	///////////////////////////////////////////////////////////////////////////
 	// ostream_iterator [ostream.iterator]
 	// Extension: ostream_iterator<void> accepts any streamable type.
@@ -76,25 +72,25 @@ STL2_OPEN_NAMESPACE {
 		}
 
 		// Extension
-		friend bool operator==(const ostream_iterator<T, charT, traits>& i, const ostream_sentinel) noexcept
+		friend bool operator==(const ostream_iterator<T, charT, traits>& i, const default_sentinel) noexcept
 		{
 			return i.out_stream_->fail();
 		}
 
 		// Extension
-		friend bool operator==(const ostream_sentinel s, const ostream_iterator<T, charT, traits>& i) noexcept
+		friend bool operator==(const default_sentinel s, const ostream_iterator<T, charT, traits>& i) noexcept
 		{
 			return i == s;
 		}
 
 		// Extension
-		friend bool operator!=(const ostream_iterator<T, charT, traits>& i, const ostream_sentinel s) noexcept
+		friend bool operator!=(const ostream_iterator<T, charT, traits>& i, const default_sentinel s) noexcept
 		{
 			return !(i == s);
 		}
 
 		// Extension
-		friend bool operator!=(const ostream_sentinel s, const ostream_iterator<T, charT, traits>& i) noexcept
+		friend bool operator!=(const default_sentinel s, const ostream_iterator<T, charT, traits>& i) noexcept
 		{
 			return !(i == s);
 		}
@@ -102,73 +98,6 @@ STL2_OPEN_NAMESPACE {
 		detail::raw_ptr<basic_ostream<charT, traits>> out_stream_{nullptr};
 		const charT* delim_{nullptr};
 	};
-
-	template <class T, class charT = char, class traits = char_traits<charT>>
-	class ostream_range {
-	public:
-		using value_type = T;
-		using reference = value_type&;
-		using difference_type = ptrdiff_t;
-		using iterator = ostream_iterator<T, charT, traits>;
-		using sentinel = ostream_sentinel;
-		using char_type = charT;
-		using traits_type = traits;
-		using ostream_type = basic_ostream<charT, traits>;
-
-		constexpr ostream_range() noexcept = default;
-
-		constexpr ostream_range(ostream_type& s) noexcept
-			: iter_{s}
-		{}
-
-		ostream_range(ostream_type& s, const charT* delimiter) noexcept
-			: iter_{s, delimiter}
-		{}
-
-		ostream_range(const ostream_range& x) noexcept
-			: iter_{x.iter_}
-		{}
-
-		ostream_range& operator=(const ostream_range& other)
-		{
-			auto temp = other;
-			ranges::swap(*this, temp);
-			return *this;
-		}
-
-		constexpr iterator begin() noexcept
-		{
-			return iter_;
-		}
-
-		constexpr iterator begin() const noexcept
-		{
-			return iter_;
-		}
-
-		constexpr iterator cbegin() const noexcept
-		{
-			return iter_;
-		}
-
-		constexpr sentinel end() noexcept
-		{
-			return ostream_sentinel{};
-		}
-
-		constexpr sentinel end() const noexcept
-		{
-			return ostream_sentinel{};
-		}
-
-		constexpr sentinel cend() const noexcept
-		{
-			return ostream_sentinel{};
-		}
-	private:
-		ostream_iterator<T, charT, traits> iter_;
-	};
-
 } STL2_CLOSE_NAMESPACE
 
 #endif
