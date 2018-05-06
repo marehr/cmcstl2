@@ -1,0 +1,1 @@
+add_stl2_test(istream_range istream_range istream_range.cpp)
