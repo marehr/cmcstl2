@@ -72,7 +72,7 @@ STL2_OPEN_NAMESPACE {
 				Is...>>;
 
 		template <typename F, typename I1, typename I2 = I1>
-		concept IndirectRegularBinaryInvocable = IndirectInvocable<F, I1, I2>;
+		concept bool IndirectRegularBinaryInvocable = IndirectInvocable<F, I1, I2>;
 	}
 
 	template <class F, class I>

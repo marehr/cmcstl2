@@ -13,6 +13,7 @@
 #ifndef CMCSTL2_DETAIL_CONCEPTS_ALGEBRAIC_GROUP_HPP
 #define CMCSTL2_DETAIL_CONCEPTS_ALGEBRAIC_GROUP_HPP
 
+#include <stl2/detail/concepts/callable.hpp>
 #include <stl2/detail/concepts/function.hpp>
 #include <stl2/detail/fwd.hpp>
 
@@ -32,7 +33,7 @@ STL2_OPEN_NAMESPACE { namespace ext {
       EqualityComparableWith<R, invoke_result_t<F, T1, T2>>;
 
    template <class F, class I1, class I2>
-   concept IndirectMagma = IndirectRegularBinaryInvocable<F, I1, I2> &&
+   concept bool IndirectMagma = IndirectRegularBinaryInvocable<F, I1, I2> &&
       Magma<F, reference_t<I1>, reference_t<I2>> &&
       Magma<F, reference_t<I1>, value_type_t<I2>> &&
       Magma<F, value_type_t<I1>, reference_t<I2>> &&
@@ -55,10 +56,10 @@ STL2_OPEN_NAMESPACE { namespace ext {
    /// \tparam T
    ///
    template <class F, class T>
-   concept bool Quasigroup = Magma<F, T>;
+   concept bool  Quasigroup = Magma<F, T>;
 
    template <class F, class I1, class I2>
-   concept IndirectQuasigroup = IndirectRegularBinaryInvocable<F, I1, I2> &&
+   concept bool IndirectQuasigroup = IndirectRegularBinaryInvocable<F, I1, I2> &&
       Quasigroup<F, reference_t<I1>, reference_t<I2>> &&
       Quasigroup<F, reference_t<I1>, value_type_t<I2>> &&
       Quasigroup<F, value_type_t<I1>, reference_t<I2>> &&
@@ -79,10 +80,10 @@ STL2_OPEN_NAMESPACE { namespace ext {
    /// \note The distinction between `Quasigroup<F, T>` and `Loop<F, T>` is purely semantic.
    ///
    template <class F, class T>
-   concept bool Loop = Quasigroup<F, T>;
+   concept bool  Loop = Quasigroup<F, T>;
 
    template <class F, class I1, class I2>
-   concept IndirectLoop = IndirectRegularBinaryInvocable<F, I1, I2> &&
+   concept bool IndirectLoop = IndirectRegularBinaryInvocable<F, I1, I2> &&
       Loop<F, reference_t<I1>, reference_t<I2>> &&
       Loop<F, reference_t<I1>, value_type_t<I2>> &&
       Loop<F, value_type_t<I1>, reference_t<I2>> &&
@@ -101,7 +102,7 @@ STL2_OPEN_NAMESPACE { namespace ext {
    /// \tparam T
    ///
    template <class F, class T>
-   concept bool Semigroup = Magma<F, T> &&
+   concept bool  Semigroup = Magma<F, T> &&
       requires {
          {T{0}} -> T; // NOTE: T must be constructible with the value `0`. While this is technically
                       // `Constructible<T, int>`, `T{i}` need not be valid, where `i` is a nonzero
@@ -109,7 +110,7 @@ STL2_OPEN_NAMESPACE { namespace ext {
       };
 
    template <class F, class I1, class I2>
-   concept IndirectSemigroup = IndirectRegularBinaryInvocable<F, I1, I2> &&
+   concept bool IndirectSemigroup = IndirectRegularBinaryInvocable<F, I1, I2> &&
       Semigroup<F, reference_t<I1>, reference_t<I2>> &&
       Semigroup<F, reference_t<I1>, value_type_t<I2>> &&
       Semigroup<F, value_type_t<I1>, reference_t<I2>> &&
@@ -130,10 +131,10 @@ STL2_OPEN_NAMESPACE { namespace ext {
    /// \note The distinction between `Semigroup<F, T>` and `Monoid<F, T>` is purely semantic.
    ///
    template <class F, class T>
-   concept bool Monoid = Semigroup<F, T>;
+   concept bool  Monoid = Semigroup<F, T>;
 
    template <class F, class I1, class I2>
-   concept IndirectMonoid = IndirectRegularBinaryInvocable<F, I1, I2> &&
+   concept bool IndirectMonoid = IndirectRegularBinaryInvocable<F, I1, I2> &&
       Monoid<F, reference_t<I1>, reference_t<I2>> &&
       Monoid<F, reference_t<I1>, value_type_t<I2>> &&
       Monoid<F, value_type_t<I1>, reference_t<I2>> &&
@@ -146,11 +147,11 @@ STL2_OPEN_NAMESPACE { namespace ext {
    /// \tparam T
    ///
    template <class F, class T>
-   concept bool Group = Monoid<F, T> &&
+   concept bool  Group = Monoid<F, T> &&
       Loop<F, T>;
 
    template <class F, class I1, class I2>
-   concept IndirectGroup = IndirectRegularBinaryInvocable<F, I1, I2> &&
+   concept bool IndirectGroup = IndirectRegularBinaryInvocable<F, I1, I2> &&
       Group<F, reference_t<I1>, reference_t<I2>> &&
       Group<F, reference_t<I1>, value_type_t<I2>> &&
       Group<F, value_type_t<I1>, reference_t<I2>> &&
@@ -167,10 +168,10 @@ STL2_OPEN_NAMESPACE { namespace ext {
    /// \note The distinction between a `Group` and `CommutativeGroup` is purely semantic.
    ///
    template <class F, class T>
-   concept bool CommutativeGroup = Group<F, T>;
+   concept bool  CommutativeGroup = Group<F, T>;
 
    template <class F, class I1, class I2>
-   concept IndirectCommutativeGroup = IndirectRegularBinaryInvocable<F, I1, I2> &&
+   concept bool IndirectCommutativeGroup = IndirectRegularBinaryInvocable<F, I1, I2> &&
       CommutativeGroup<F, reference_t<I1>, reference_t<I2>> &&
       CommutativeGroup<F, reference_t<I1>, value_type_t<I2>> &&
       CommutativeGroup<F, value_type_t<I1>, reference_t<I2>> &&

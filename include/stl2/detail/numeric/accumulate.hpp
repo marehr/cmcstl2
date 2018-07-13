@@ -18,11 +18,11 @@
 
 STL2_OPEN_NAMESPACE {
    template <class F, class T, class I>
-   concept bool __Accumulable = IndirectMagma<F, T const*, I> &&
-      Assignable<T&, indirect_invoke_result_t<F, rvalue_reference_t<T*>, reference_t<I>>> &&
+   concept bool __Accumulable = ext::IndirectMagma<F, T const*, I> &&
+      Assignable<T&, indirect_result_of_t<F&(rvalue_reference_t<T*>, reference_t<I>)>> &&
       Common<T, value_type_t<I>> &&
-      Common<T, indirect_invoke_result_t<F, T const*, I>> &&
-      Common<value_type_t<I>, indirect_invoke_result_t<F, T const*, I>>;
+      Common<T, indirect_result_of_t<F&(T const*, I)>> &&
+      Common<value_type_t<I>, indirect_result_of_t<F&(T const*, I)>>;
 
    template <Copyable T, InputIterator I>
    requires CommonReference<T, reference_t<I>>
@@ -50,6 +50,6 @@ STL2_OPEN_NAMESPACE {
       return __stl2::accumulate(__stl2::begin(rng), __stl2::end(rng), std::move(init),
          binary_op, proj);
    }
-} STL2_CLOSE_NAMESPACE
+}} STL2_CLOSE_NAMESPACE // ::ext
 
 #endif // STL2_DETAIL_NUMERIC_ACCUMULATE_HPP
