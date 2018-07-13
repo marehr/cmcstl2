@@ -70,6 +70,9 @@ STL2_OPEN_NAMESPACE {
 					meta::bind_front<meta::quote<__callable_result_t>, F&>,
 					meta::quote<__common_reference>>,
 				Is...>>;
+
+		template <typename F, typename I1, typename I2 = I1>
+		concept IndirectRegularBinaryInvocable = IndirectInvocable<F, I1, I2>;
 	}
 
 	template <class F, class I>
