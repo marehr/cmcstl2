@@ -27,7 +27,7 @@
 STL2_OPEN_NAMESPACE {
 	namespace ext {
 		template <class R>
-		concept bool _TinyRange =
+		STL2_CONCEPT_KEYWORD _TinyRange =
 			SizedRange<R> && std::remove_reference_t<R>::size() <= 1;
 
 		template <InputRange Rng>

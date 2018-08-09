@@ -44,20 +44,20 @@ STL2_OPEN_NAMESPACE {
 	using sentinel_t = __end_t<T&>;
 
 	template <class T>
-	concept bool _RangeImpl =
+	STL2_CONCEPT_KEYWORD _RangeImpl =
 		requires(T&& t) {
 			__stl2::begin(static_cast<T&&>(t)); // not necessarily equality-preserving
 			__stl2::end(static_cast<T&&>(t));
 		};
 
 	template <class T>
-	concept bool Range = _RangeImpl<T&>;
+	STL2_CONCEPT_KEYWORD Range = _RangeImpl<T&>;
 
 	template <class T>
-	concept bool _ForwardingRange = Range<T> && _RangeImpl<T>;
+	STL2_CONCEPT_KEYWORD _ForwardingRange = Range<T> && _RangeImpl<T>;
 
 	template <class R>
-	concept bool SizedRange =
+	STL2_CONCEPT_KEYWORD SizedRange =
 		Range<R> &&
 		!disable_sized_range<__uncvref<R>> &&
 		requires(const remove_reference_t<R>& r) {
@@ -71,7 +71,7 @@ STL2_OPEN_NAMESPACE {
 	struct view_base {};
 
 	template <class T>
-	concept bool _ContainerLike =
+	STL2_CONCEPT_KEYWORD _ContainerLike =
 		Range<T> && Range<const T> &&
 		!Same<iter_reference_t<iterator_t<T>>, iter_reference_t<iterator_t<const T>>>;
 
@@ -109,7 +109,7 @@ STL2_OPEN_NAMESPACE {
 	struct __view_predicate<std::unordered_multiset<Key, Hash, Pred, Alloc>> : std::false_type {};
 
 	template <class T>
-	concept bool View =
+	STL2_CONCEPT_KEYWORD View =
 		Range<T> &&
 		Semiregular<T> &&
 		__view_predicate<__uncvref<T>>::value;
@@ -118,47 +118,47 @@ STL2_OPEN_NAMESPACE {
 	// CommonRange
 	//
 	template <class T>
-	concept bool CommonRange =
+	STL2_CONCEPT_KEYWORD CommonRange =
 		Range<T> && Same<iterator_t<T>, sentinel_t<T>>;
 
 	///////////////////////////////////////////////////////////////////////////
 	// OutputRange [ranges.output]
 	//
 	template <class R, class T>
-	concept bool OutputRange =
+	STL2_CONCEPT_KEYWORD OutputRange =
 		Range<R> && OutputIterator<iterator_t<R>, T>;
 
 	///////////////////////////////////////////////////////////////////////////
 	// InputRange [ranges.input]
 	//
 	template <class T>
-	concept bool InputRange =
+	STL2_CONCEPT_KEYWORD InputRange =
 		Range<T> && InputIterator<iterator_t<T>>;
 
 	///////////////////////////////////////////////////////////////////////////
 	// ForwardRange [ranges.forward]
 	//
 	template <class T>
-	concept bool ForwardRange =
+	STL2_CONCEPT_KEYWORD ForwardRange =
 		Range<T> && ForwardIterator<iterator_t<T>>;
 
 	///////////////////////////////////////////////////////////////////////////
 	// BidirectionalRange [ranges.bidirectional]
 	//
 	template <class T>
-	concept bool BidirectionalRange =
+	STL2_CONCEPT_KEYWORD BidirectionalRange =
 		Range<T> && BidirectionalIterator<iterator_t<T>>;
 
 	///////////////////////////////////////////////////////////////////////////
 	// RandomAccessRange [ranges.random.access]
 	//
 	template <class T>
-	concept bool RandomAccessRange =
+	STL2_CONCEPT_KEYWORD RandomAccessRange =
 		Range<T> && RandomAccessIterator<iterator_t<T>>;
 
 	namespace ext {
 		template <class R>
-		concept bool ContiguousRange =
+		STL2_CONCEPT_KEYWORD ContiguousRange =
 			_Is<iter_reference_t<iterator_t<R>>, is_reference> &&
 			Same<iter_value_t<iterator_t<R>>, __uncvref<iter_reference_t<iterator_t<R>>>> &&
 			requires(R& r) {
@@ -168,14 +168,14 @@ STL2_OPEN_NAMESPACE {
 
 	namespace ext {
 		template <class R>
-		concept bool SimpleView =
+		STL2_CONCEPT_KEYWORD SimpleView =
 			View<R> && Range<const R> &&
 			Same<iterator_t<R>, iterator_t<const R>> &&
 			Same<sentinel_t<R>, sentinel_t<const R>>;
 	}
 	namespace ext {
 		template<class Rng>
-		concept bool ViewableRange =
+		STL2_CONCEPT_KEYWORD ViewableRange =
 			Range<Rng> &&
 			(_RangeImpl<Rng> || View<__f<Rng>>);
 	}

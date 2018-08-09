@@ -18,6 +18,16 @@
 
 #include <stl2/meta/meta.hpp>
 
+#ifndef STL2_CONCEPT_KEYWORD
+# if defined __clang__
+#  define STL2_CONCEPT_KEYWORD concept
+# elif defined __GNUC__
+#  define STL2_CONCEPT_KEYWORD concept bool
+# else
+#  error "Please use either GCC 7+ or the clang-concepts experimental branch."
+# endif // __GNUC__
+#endif // STL2_CONCEPT_KEYWORD
+
 #ifdef __clang__
  #define STL2_HAS_BUILTIN(X) __has_builtin(__builtin_ ## X)
 #else // __clang__

@@ -18,6 +18,16 @@
 #include <utility>
 #include <type_traits>
 
+#ifndef STL2_CONCEPT_KEYWORD
+# if defined __clang__
+#  define STL2_CONCEPT_KEYWORD concept
+# elif defined __GNUC__
+#  define STL2_CONCEPT_KEYWORD concept bool
+# else
+#  error "Please use either GCC 7+ or the clang-concepts experimental branch."
+# endif // __GNUC__
+#endif // STL2_CONCEPT_KEYWORD
+
 #ifndef META_DISABLE_DEPRECATED_WARNINGS
 #ifdef __cpp_attribute_deprecated
 #define META_DEPRECATED(MSG) [[deprecated(MSG)]]
@@ -66,41 +76,41 @@ namespace meta
         constexpr bool is_list_v<list<Ts...>> = true;
 
         template <typename...>
-        concept bool True = true;
+        STL2_CONCEPT_KEYWORD True = true;
 
         template <typename T, typename U>
-        concept bool Same = detail::bool_<std::is_same<T, U>::value>;
+        STL2_CONCEPT_KEYWORD Same = detail::bool_<std::is_same<T, U>::value>;
 
         template <template <typename...> class C, typename... Ts>
-        concept bool Valid = requires
+        STL2_CONCEPT_KEYWORD Valid = requires
         {
             typename C<Ts...>;
         };
 
         template <typename T, template <T...> class C, T... Is>
-        concept bool Valid_I = requires
+        STL2_CONCEPT_KEYWORD Valid_I = requires
         {
             typename C<Is...>;
         };
 
         template <typename T>
-        concept bool Trait = requires
+        STL2_CONCEPT_KEYWORD Trait = requires
         {
             typename T::type;
         };
 
         template <typename T>
-        concept bool Invocable = requires
+        STL2_CONCEPT_KEYWORD Invocable = requires
         {
             typename quote<T::template invoke>;
         };
 
         template <typename T>
-        concept bool List = is_list_v<T>;
+        STL2_CONCEPT_KEYWORD List = is_list_v<T>;
 
         // clang-format off
         template <typename T>
-        concept bool Integral = requires
+        STL2_CONCEPT_KEYWORD Integral = requires
         {
             typename T::type;
             typename T::value_type;

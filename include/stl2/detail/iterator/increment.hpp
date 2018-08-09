@@ -30,7 +30,7 @@ STL2_OPEN_NAMESPACE {
 	//
 	namespace detail {
 		template <class T>
-		concept bool MemberDifferenceType =
+		STL2_CONCEPT_KEYWORD MemberDifferenceType =
 			requires { typename T::difference_type; };
 	}
 
@@ -69,7 +69,7 @@ STL2_OPEN_NAMESPACE {
 	// WeaklyIncrementable [weaklyincrementable.iterators]
 	//
 	template <class I>
-	concept bool WeaklyIncrementable =
+	STL2_CONCEPT_KEYWORD WeaklyIncrementable =
 		Semiregular<I> &&
 		requires(I& i) {
 			typename iter_difference_t<I>;
@@ -81,7 +81,7 @@ STL2_OPEN_NAMESPACE {
 	// Incrementable [incrementable.iterators]
 	//
 	template <class I>
-	concept bool Incrementable =
+	STL2_CONCEPT_KEYWORD Incrementable =
 		WeaklyIncrementable<I> &&
 		EqualityComparable<I> &&
 		requires(I& i) {
@@ -93,7 +93,7 @@ STL2_OPEN_NAMESPACE {
 	//
 	namespace ext {
 		template <class I>
-		concept bool Decrementable =
+		STL2_CONCEPT_KEYWORD Decrementable =
 			Incrementable<I> &&
 			requires(I& i) {
 				{ --i } -> Same<I&>&&;
@@ -112,7 +112,7 @@ STL2_OPEN_NAMESPACE {
 	//
 	namespace ext {
 		template <class I>
-		concept bool RandomAccessIncrementable =
+		STL2_CONCEPT_KEYWORD RandomAccessIncrementable =
 			Decrementable<I> &&
 			requires(I& i, const I& ci, const iter_difference_t<I> n) {
 				{ i += n } -> Same<I&>&&;

@@ -24,7 +24,7 @@
 
 STL2_OPEN_NAMESPACE {
 	template <class T>
-	concept bool _PairLike =
+	STL2_CONCEPT_KEYWORD _PairLike =
 		meta::Integral<std::tuple_size<T>> &&
 		std::tuple_size<T>::value == 2 &&
 		meta::Trait<std::tuple_element<0, T>> &&
@@ -35,7 +35,7 @@ STL2_OPEN_NAMESPACE {
 		};
 
 	template <class T, class U, class V>
-	concept bool _PairLikeConvertibleTo =
+	STL2_CONCEPT_KEYWORD _PairLikeConvertibleTo =
 		!Range<T> && _PairLike<__uncvref<T>> &&
 		requires(T&& t) {
 			{ std::get<0>(static_cast<T&&>(t)) } -> ConvertibleTo<U>;
@@ -43,12 +43,12 @@ STL2_OPEN_NAMESPACE {
 		};
 
 	template <class T, class U, class V>
-	concept bool _PairLikeConvertibleFrom =
+	STL2_CONCEPT_KEYWORD _PairLikeConvertibleFrom =
 		!Range<T> && Same<T, __uncvref<T>> && _PairLike<T> &&
 		Constructible<T, U, V>;
 
 	template <class T>
-	concept bool _IteratorSentinelPair =
+	STL2_CONCEPT_KEYWORD _IteratorSentinelPair =
 		!Range<T> && Same<T, __uncvref<T>> && _PairLike<T> &&
 		Sentinel<std::tuple_element_t<1, T>, std::tuple_element_t<0, T>>;
 

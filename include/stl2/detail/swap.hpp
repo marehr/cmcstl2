@@ -103,13 +103,13 @@ STL2_OPEN_NAMESPACE {
 	// Swappable [concepts.lib.corelang.swappable]
 	//
 	template <class T>
-	concept bool Swappable =
+	STL2_CONCEPT_KEYWORD Swappable =
 		requires(T& a, T& b) {
 			__stl2::swap(a, b);
 		};
 
 	template <class T, class U>
-	concept bool SwappableWith =
+	STL2_CONCEPT_KEYWORD SwappableWith =
 		CommonReference<
 			const remove_reference_t<T>&,
 			const remove_reference_t<U>&> &&

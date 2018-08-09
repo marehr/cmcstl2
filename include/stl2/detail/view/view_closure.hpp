@@ -21,7 +21,7 @@ STL2_OPEN_NAMESPACE {
 		struct __pipeable_base {};
 
 		template <class T>
-		concept bool Pipeable =
+		STL2_CONCEPT_KEYWORD Pipeable =
 			DerivedFrom<T, __pipeable_base> && CopyConstructible<T>;
 
 		template <std::size_t, class T>
