@@ -2,7 +2,7 @@
 //
 // Meta library
 //
-//  Copyright Eric Niebler 2014-2015
+//  Copyright Eric Niebler 2014-present
 //
 //  Use, modification and distribution is subject to the
 //  Boost Software License, Version 1.0. (See accompanying
@@ -16,7 +16,8 @@
 #define META_FWD_HPP
 
 #include <utility>
-#include <type_traits>
+
+#define META_CXX_STD_14 201402L
 
 #ifndef STL2_CONCEPT_KEYWORD
 # if defined __clang__
@@ -28,20 +29,60 @@
 # endif // __GNUC__
 #endif // STL2_CONCEPT_KEYWORD
 
-#ifndef META_DISABLE_DEPRECATED_WARNINGS
-#ifdef __cpp_attribute_deprecated
-#define META_DEPRECATED(MSG) [[deprecated(MSG)]]
+#if defined(_MSC_VER) && defined(_MSVC_LANG)
+#define META_CXX_VER _MSVC_LANG
+#define META_HAS_MAKE_INTEGER_SEQ 1
 #else
-#if defined(__clang__) || defined(__GNUC__)
-#define META_DEPRECATED(MSG) __attribute__((deprecated(MSG)))
-#elif defined(_MSC_VER)
-#define META_DEPRECATED(MSG) __declspec(deprecated(MSG))
+#define META_CXX_VER __cplusplus
+#endif
+
+#ifndef META_CXX_VARIABLE_TEMPLATES
+#ifdef __cpp_variable_templates
+#define META_CXX_VARIABLE_TEMPLATES __cpp_variable_templates
 #else
-#define META_DEPRECATED(MSG)
+#define META_CXX_VARIABLE_TEMPLATES (META_CXX_VER >= META_CXX_STD_14)
 #endif
 #endif
+
+#ifndef META_CXX_INTEGER_SEQUENCE
+#ifdef __cpp_lib_integer_sequence
+#define META_CXX_INTEGER_SEQUENCE __cpp_lib_integer_sequence
 #else
-#define META_DEPRECATED(MSG)
+#define META_CXX_INTEGER_SEQUENCE (META_CXX_VER >= META_CXX_STD_14)
+#endif
+#endif
+
+#ifndef META_HAS_MAKE_INTEGER_SEQ
+#ifdef __has_builtin
+#if __has_builtin(__make_integer_seq)
+#define META_HAS_MAKE_INTEGER_SEQ 1
+#endif
+#endif
+#endif
+#ifndef META_HAS_MAKE_INTEGER_SEQ
+#define META_HAS_MAKE_INTEGER_SEQ 0
+#endif
+
+#ifndef META_HAS_TYPE_PACK_ELEMENT
+#ifdef __has_builtin
+#if __has_builtin(__type_pack_element)
+#define META_HAS_TYPE_PACK_ELEMENT 1
+#endif
+#endif
+#endif
+#ifndef META_HAS_TYPE_PACK_ELEMENT
+#define META_HAS_TYPE_PACK_ELEMENT 0
+#endif
+
+#if !defined(META_DEPRECATED) && !defined(META_DISABLE_DEPRECATED_WARNINGS)
+#if defined(__cpp_attribute_deprecated) || META_CXX_VER >= META_CXX_STD_14
+#define META_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
+#elif defined(__clang__) || defined(__GNUC__)
+#define META_DEPRECATED(...) __attribute__((deprecated(__VA_ARGS__)))
+#endif
+#endif
+#ifndef META_DEPRECATED
+#define META_DEPRECATED(...)
 #endif
 
 namespace meta
@@ -51,7 +92,7 @@ namespace meta
         namespace detail
         {
             template <bool B>
-            constexpr bool bool_ = B;
+            using bool_ = std::integral_constant<bool, B>;
         }
 
         template <typename... Ts>
@@ -79,7 +120,7 @@ namespace meta
         STL2_CONCEPT_KEYWORD True = true;
 
         template <typename T, typename U>
-        STL2_CONCEPT_KEYWORD Same = detail::bool_<std::is_same<T, U>::value>;
+        STL2_CONCEPT_KEYWORD Same = detail::bool_<std::is_same<T, U>::value>::value;
 
         template <template <typename...> class C, typename... Ts>
         STL2_CONCEPT_KEYWORD Valid = requires
@@ -133,22 +174,20 @@ namespace meta
         && std::is_integral<typename T::value_type>::value
         && T::value == T::type::value
         && T{}() == T::value;
-        // clang-format on
 
         template <typename T>
         struct id;
 
-        template <Invocable... Fs>
+        template <typename... Fs>
         struct compose;
 
         namespace extension
         {
-            template <Invocable F, typename L>
+            template <typename F, typename List>
             struct apply;
         }
 
         using std::integer_sequence;
-
     } // inline namespace v1
 } // namespace meta
 
