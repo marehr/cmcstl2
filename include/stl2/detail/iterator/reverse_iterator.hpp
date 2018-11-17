@@ -25,7 +25,7 @@
 //
 STL2_OPEN_NAMESPACE {
 	namespace __reverse_iterator {
-		BidirectionalIterator{I}
+		template<BidirectionalIterator I>
 		class cursor;
 
 		struct access {
@@ -35,7 +35,7 @@ STL2_OPEN_NAMESPACE {
 			}
 		};
 
-		BidirectionalIterator{I}
+		template<BidirectionalIterator I>
 		class cursor {
 			friend access;
 			I current_{};
@@ -104,14 +104,18 @@ STL2_OPEN_NAMESPACE {
 				current_ -= n;
 			}
 
+			template <typename U>
+				requires EqualityComparableWith<U, I>
 			constexpr bool equal(
-				const cursor<EqualityComparableWith<I> >& that) const
+				const cursor<U>& that) const
 			STL2_NOEXCEPT_RETURN(
 				current_ == access::current(that)
 			)
 
+			template <typename U>
+				requires SizedSentinel<U, I>
 			constexpr iter_difference_t<I> distance_to(
-				const cursor<SizedSentinel<I> >& that) const
+				const cursor<U>& that) const
 			STL2_NOEXCEPT_RETURN(
 				-(access::current(that) - current_)
 			)
@@ -123,8 +127,10 @@ STL2_OPEN_NAMESPACE {
 			)
 
 			// Extension
+			template <typename U>
+				requires IndirectlySwappable<U, I>
 			constexpr void indirect_swap(
-				const cursor<IndirectlySwappable<I> >& that) const
+				const cursor<U>& that) const
 			STL2_NOEXCEPT_RETURN(
 				__stl2::iter_swap(
 					__stl2::prev(current_), __stl2::prev(access::current(that)))
@@ -132,10 +138,10 @@ STL2_OPEN_NAMESPACE {
 		};
 	}
 
-	BidirectionalIterator{I}
+	template<BidirectionalIterator I>
 	using reverse_iterator = basic_iterator<__reverse_iterator::cursor<I>>;
 
-	StrictTotallyOrderedWith{I1, I2}
+	template<class I1,class I2> requires StrictTotallyOrderedWith<I1, I2>
 	constexpr bool operator<(
 		const reverse_iterator<I1>& x, const reverse_iterator<I2>& y)
 	STL2_NOEXCEPT_RETURN(
@@ -143,21 +149,21 @@ STL2_OPEN_NAMESPACE {
 			__reverse_iterator::access::current(__stl2::get_cursor(y))
 	)
 
-	StrictTotallyOrderedWith{I1, I2}
+	template<class I1,class I2> requires StrictTotallyOrderedWith<I1, I2>
 	constexpr bool operator>(
 		const reverse_iterator<I1>& x, const reverse_iterator<I2>& y)
 	STL2_NOEXCEPT_RETURN(
 		y < x
 	)
 
-	StrictTotallyOrderedWith{I1, I2}
+	template<class I1,class I2> requires StrictTotallyOrderedWith<I1, I2>
 	constexpr bool operator<=(
 		const reverse_iterator<I1>& x, const reverse_iterator<I2>& y)
 	STL2_NOEXCEPT_RETURN(
 		!(y < x)
 	)
 
-	StrictTotallyOrderedWith{I1, I2}
+	template<class I1,class I2> requires StrictTotallyOrderedWith<I1, I2>
 	constexpr bool operator>=(
 		const reverse_iterator<I1>& x, const reverse_iterator<I2>& y)
 	STL2_NOEXCEPT_RETURN(

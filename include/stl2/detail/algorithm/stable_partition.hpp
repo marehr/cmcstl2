@@ -30,7 +30,7 @@
 STL2_OPEN_NAMESPACE {
 	namespace detail {
 		namespace stable_part {
-			Readable{I}
+			template<Readable I>
 			using buf_t = detail::temporary_buffer<iter_value_t<I>>;
 
 			template <ForwardIterator I, class Proj,

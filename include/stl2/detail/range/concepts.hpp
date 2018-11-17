@@ -94,7 +94,7 @@ STL2_OPEN_NAMESPACE {
 	struct __view_predicate : __view_predicate2<T> {};
 
 	template <class T>
-		requires meta::Trait<enable_view<T>>
+		requires requires() { typename enable_view<T>::type ;}
 	struct __view_predicate<T> : enable_view<T> {};
 
 	template <class T>

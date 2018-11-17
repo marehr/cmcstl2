@@ -130,7 +130,7 @@ STL2_OPEN_NAMESPACE {
 		template <class> struct reference_type {};
 		template <class C>
 		requires
-			requires(const C& c) { { c.read() } -> auto&&; }
+			requires(const C& c) { { c.read() }; /* -> auto&&;*/ }
 		struct reference_type<C> {
 			using type = decltype(declval<const C&>().read());
 		};
@@ -176,7 +176,7 @@ STL2_OPEN_NAMESPACE {
 		STL2_CONCEPT_KEYWORD Readable =
 			Cursor<C> &&
 			requires(const C& c) {
-				{ c.read() } -> auto&&;
+				{ c.read() }; /*-> auto&&;*/
 				typename reference_t<C>;
 				typename value_type_t<C>;
 			};
@@ -184,7 +184,7 @@ STL2_OPEN_NAMESPACE {
 		STL2_CONCEPT_KEYWORD Arrow =
 			Readable<C> &&
 			requires(const C& c) {
-				{ c.arrow() } -> auto&&;
+				{ c.arrow() }; /*-> auto&&;*/
 			};
 		template <class C, class T>
 		STL2_CONCEPT_KEYWORD Writable =
@@ -228,7 +228,7 @@ STL2_OPEN_NAMESPACE {
 		template <class C>
 		STL2_CONCEPT_KEYWORD IndirectMove =
 			Readable<C> && requires(const C& c) {
-				{ c.indirect_move() } -> auto&&;
+				{ c.indirect_move() }; /*-> auto&&;*/
 			};
 
 		template <class> struct rvalue_reference {};
@@ -328,7 +328,7 @@ STL2_OPEN_NAMESPACE {
 			using common_refs = meta::list<>;
 		};
 
-		cursor::Readable{C}
+		template<cursor::Readable C>
 		struct cursor_traits<C> {
 			using value_t_ = cursor::value_type_t<C>;
 			using reference_t_ = cursor::reference_t<C>;
@@ -523,7 +523,7 @@ STL2_OPEN_NAMESPACE {
 			using const_reference_t = basic_proxy_reference<const Cur>;
 		};
 
-		cursor::Readable{Cur}
+		template <cursor::Readable Cur>
 		struct iterator_associated_types_base<Cur> {
 			using reference_t =
 				meta::if_c<
@@ -609,7 +609,7 @@ STL2_OPEN_NAMESPACE {
 		)
 	} // namespace basic_iterator_adl
 
-	cursor::Cursor{C}
+	template<cursor::Cursor C>
 	class basic_iterator
 	: public mixin_t<C>
 	, detail::iterator_associated_types_base<C>

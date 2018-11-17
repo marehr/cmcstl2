@@ -23,7 +23,8 @@
 STL2_OPEN_NAMESPACE {
 	namespace detail {
 		struct temporary_buffer_deleter {
-			void operator()(auto* ptr) const {
+			template <typename T>
+			void operator()(T* ptr) const {
 				std::return_temporary_buffer(ptr);
 			}
 		};
@@ -160,7 +161,7 @@ STL2_OPEN_NAMESPACE {
 			{ emplace_back(std::move(t)); }
 		};
 
-		ext::DestructibleObject{T}
+		template <ext::DestructibleObject T>
 		temporary_vector<T> make_temporary_vector(temporary_buffer<T>& buf) {
 			return {buf};
 		}

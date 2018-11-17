@@ -136,7 +136,8 @@ STL2_OPEN_NAMESPACE {
 			{
 				return i1 == i2;
 			}
-			constexpr bool operator()(const auto& lhs, const auto& rhs) const
+			template <class lhs_t, class rhs_t>
+			constexpr bool operator()(const lhs_t& lhs, const rhs_t& rhs) const
 			STL2_NOEXCEPT_RETURN(
 				bool(lhs == rhs)
 			)
@@ -148,8 +149,9 @@ STL2_OPEN_NAMESPACE {
 		template <class I2, SizedSentinel<I2> I1,
 			SizedSentinel<I2> S1, SizedSentinel<I1> S2>
 		struct difference_visitor {
+			template <class lhs_t, class rhs_t>
 			constexpr iter_difference_t<I2> operator()(
-				const auto& lhs, const auto& rhs) const
+				const lhs_t& lhs, const rhs_t& rhs) const
 			STL2_NOEXCEPT_RETURN(
 				static_cast<iter_difference_t<I2>>(lhs - rhs)
 			)

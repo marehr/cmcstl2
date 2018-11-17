@@ -37,7 +37,7 @@ STL2_OPEN_NAMESPACE {
 	struct __common_reference<T, U, Rest...>
 	: __common_reference<common_reference_t<T, U>, Rest...> {};
 
-	template <Readable... Is>
+	template <class... Is>
 	using __iter_args_lists =
 		meta::push_back<
 			meta::cartesian_product<
@@ -50,7 +50,8 @@ STL2_OPEN_NAMESPACE {
 			meta::uncurry<meta::on<ReduceFn, meta::uncurry<MapFn>>>,
 			meta::quote<__iter_args_lists>>;
 
-	Invocable{F, ...Args}
+	template <class F, class ...Args>
+		requires Invocable<F, Args...>
 	using __callable_result_t =
 		result_of_t<F(Args...)>;
 
@@ -94,7 +95,7 @@ STL2_OPEN_NAMESPACE {
 		ext::IndirectRegularInvocable<F, I>;
 
 	template <class, class...> struct __predicate : std::false_type {};
-	Predicate{F, ...Args} struct __predicate<F, Args...> : std::true_type {};
+	template<class F, class ...Args> requires Predicate<F, Args...> struct __predicate<F, Args...> : std::true_type {};
 
 	namespace ext {
 		template <class F, class... Is>

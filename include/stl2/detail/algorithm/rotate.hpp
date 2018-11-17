@@ -92,7 +92,8 @@ STL2_OPEN_NAMESPACE {
 		return {std::move(r), std::move(i)};
 	}
 
-	constexpr Integral __gcd(Integral x, Integral y)
+	template <Integral I>
+	constexpr I __gcd(I x, I y)
 	{
 		do {
 			auto t = x % y;
@@ -142,7 +143,7 @@ STL2_OPEN_NAMESPACE {
 			std::move(first), std::move(middle), std::move(last));
 	}
 
-	Permutable{I}
+	template <Permutable I>
 	ext::subrange<I> __rotate(I first, I middle, I last)
 	{
 		if (is_trivially_move_assignable<iter_value_t<I>>()) {
