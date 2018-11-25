@@ -199,7 +199,7 @@ STL2_OPEN_NAMESPACE {
 		using type = input_iterator_tag;
 	};
 
-	template<class I1,class I2> requires StrictTotallyOrderedWith<I1, I2>
+	template <class I1, StrictTotallyOrderedWith<I1> I2>
 	constexpr bool
 	operator<(const move_iterator<I1>& a, const move_iterator<I2>& b)
 	STL2_NOEXCEPT_RETURN(
@@ -207,21 +207,21 @@ STL2_OPEN_NAMESPACE {
 			__move_iterator::access::current(__stl2::get_cursor(b))
 	)
 
-	template<class I1,class I2> requires StrictTotallyOrderedWith<I1, I2>
+	template <class I1, StrictTotallyOrderedWith<I1> I2>
 	constexpr bool
 	operator>(const move_iterator<I1>& a, const move_iterator<I2>& b)
 	STL2_NOEXCEPT_RETURN(
 		b < a
 	)
 
-	template<class I1,class I2> requires StrictTotallyOrderedWith<I1, I2>
+	template <class I1, StrictTotallyOrderedWith<I1> I2>
 	constexpr bool
 	operator<=(const move_iterator<I1>& a, const move_iterator<I2>& b)
 	STL2_NOEXCEPT_RETURN(
 		!(b < a)
 	)
 
-	template<class I1,class I2> requires StrictTotallyOrderedWith<I1, I2>
+	template <class I1, StrictTotallyOrderedWith<I1> I2>
 	constexpr bool
 	operator>=(const move_iterator<I1>& a, const move_iterator<I2>& b)
 	STL2_NOEXCEPT_RETURN(
