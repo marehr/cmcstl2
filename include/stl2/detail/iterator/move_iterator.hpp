@@ -147,10 +147,8 @@ STL2_OPEN_NAMESPACE {
 				current_ == access::current(that)
 			)
 
-			template <class U>
-				requires Sentinel<U, I>
-			constexpr bool equal(
-				const move_sentinel<U >& that) const
+			template <Sentinel<I> S>
+			constexpr bool equal(const move_sentinel<S>& that) const
 			STL2_NOEXCEPT_RETURN(
 				current_ == access::sentinel(that)
 			)
