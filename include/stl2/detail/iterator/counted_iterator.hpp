@@ -257,8 +257,8 @@ STL2_OPEN_NAMESPACE {
 			return i;
 		}
 
-		template<Iterator I>
-		constexpr auto uncounted(const counted_iterator<I>& i)
+		template <class T>
+		constexpr auto uncounted(const counted_iterator<T>& i)
 		STL2_NOEXCEPT_RETURN(
 			i.base()
 		)
