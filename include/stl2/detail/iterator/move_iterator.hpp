@@ -141,10 +141,8 @@ STL2_OPEN_NAMESPACE {
 				current_ += n;
 			}
 
-			template <class U>
-				requires EqualityComparableWith<U, I>
-			constexpr bool equal(
-				const cursor<U >& that) const
+			template<EqualityComparableWith<I> U>
+			constexpr bool equal(const cursor<U>& that) const
 			STL2_NOEXCEPT_RETURN(
 				current_ == access::current(that)
 			)
