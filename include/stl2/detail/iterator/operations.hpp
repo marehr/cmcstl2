@@ -246,7 +246,7 @@ STL2_OPEN_NAMESPACE {
 			return {n, std::move(first)};
 		}
 
-		template<class S, class I> requires SizedSentinel<S, I>
+		template <Iterator I, SizedSentinel<I> S>
 		constexpr tagged_pair<tag::count(iter_difference_t<I>), tag::end(I)>
 		enumerate(I first, S last)
 		noexcept(noexcept(__stl2::next(std::move(first), std::move(last))) &&
@@ -279,7 +279,7 @@ STL2_OPEN_NAMESPACE {
 		ext::enumerate(std::move(first), std::move(last)).first
 	)
 
-	template<class S, class I> requires SizedSentinel<S, I>
+	template <Iterator I, SizedSentinel<I> S>
 		// Pre: [first, last)
 	constexpr iter_difference_t<I> distance(I first, S last)
 	noexcept(noexcept(last - first))
