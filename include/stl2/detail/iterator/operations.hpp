@@ -232,7 +232,7 @@ STL2_OPEN_NAMESPACE {
 	)
 
 	namespace ext {
-		template<class S, class I> requires Sentinel<S, I>
+		template <Iterator I, Sentinel<I> S>
 		constexpr tagged_pair<tag::count(iter_difference_t<I>), tag::end(I)>
 		enumerate(I first, S last)
 		noexcept(noexcept(++first != last) &&
@@ -272,7 +272,7 @@ STL2_OPEN_NAMESPACE {
 	}
 
 	// distance
-	template<class S, class I> requires Sentinel<S, I>
+	template <Iterator I, Sentinel<I> S>
 		// Pre: [first, last)
 	constexpr iter_difference_t<I> distance(I first, S last)
 	STL2_NOEXCEPT_RETURN(
