@@ -23,7 +23,7 @@
 STL2_OPEN_NAMESPACE {
 	namespace detail {
 		struct temporary_buffer_deleter {
-			template <typename T>
+			template <class T>
 			void operator()(T* ptr) const {
 				std::return_temporary_buffer(ptr);
 			}
