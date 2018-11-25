@@ -30,7 +30,7 @@ STL2_OPEN_NAMESPACE {
 		constexpr __upper_bound_fn(C comp, const T& value)
 		: comp_(std::ref(comp)), value_(value) {}
 
-		template <T> constexpr bool operator()(T&& i) const {
+		template <class U> constexpr bool operator()(T&& i) const {
 			return !__stl2::invoke(comp_, value_, i);
 		}
 	};
