@@ -33,8 +33,7 @@ STL2_OPEN_NAMESPACE {
 
 	template <>
 	struct equal_to<void> {
-		template <typename T, typename U>
-			requires EqualityComparableWith<T, U>
+		template <class T, EqualityComparableWith<T> U>
 		constexpr decltype(auto) operator()(T&& t, U&& u) const {
 			return std::forward<T>(t) == std::forward<U>(u);
 		}
@@ -55,8 +54,7 @@ STL2_OPEN_NAMESPACE {
 
 	template <>
 	struct not_equal_to<void> {
-		template <typename T, typename U>
-			requires EqualityComparableWith<T, U>
+		template <class T, EqualityComparableWith<T> U>
 		constexpr decltype(auto) operator()(T&& t, U&& u) const {
 			return std::forward<T>(t) != std::forward<U>(u);
 		}
