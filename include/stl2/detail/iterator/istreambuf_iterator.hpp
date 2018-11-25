@@ -127,8 +127,7 @@ STL2_OPEN_NAMESPACE {
 				// Yuck. This can't be simply "basic_iterator<cursor>".
 				// Since basic_iterator<cursor> derives from mixin, mixin must be
 				// instantiable before basic_iterator<cursor> is complete.
-				template <class U>
-					requires Same<cursor, U>
+				template <Same<cursor> U>
 				STL2_CONSTEXPR_EXT bool
 				equal(const basic_iterator<U>& that) const noexcept {
 					return base_t::get().equal(__stl2::get_cursor(that));
