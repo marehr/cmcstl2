@@ -75,8 +75,7 @@ STL2_OPEN_NAMESPACE {
 
 	template <>
 	struct greater<void> {
-		template <typename T, typename U>
-			requires StrictTotallyOrderedWith<T, U>
+		template <class T, StrictTotallyOrderedWith<T> U>
 		constexpr decltype(auto) operator()(T&& t, U&& u) const {
 			return std::forward<T>(t) > std::forward<U>(u);
 		}
@@ -102,8 +101,7 @@ STL2_OPEN_NAMESPACE {
 
 	template <>
 	struct less<void> {
-		template <typename T, typename U>
-			requires StrictTotallyOrderedWith<T, U>
+		template <class T, StrictTotallyOrderedWith<T> U>
 		constexpr decltype(auto) operator()(T&& t, U&& u) const {
 			return std::forward<T>(t) < std::forward<U>(u);
 		}
@@ -129,8 +127,7 @@ STL2_OPEN_NAMESPACE {
 
 	template <>
 	struct greater_equal<void> {
-		template <typename T, typename U>
-			requires StrictTotallyOrderedWith<T, U>
+		template <class T, StrictTotallyOrderedWith<T> U>
 		constexpr decltype(auto) operator()(T&& t, U&& u) const {
 			return std::forward<T>(t) >= std::forward<U>(u);
 		}
@@ -156,8 +153,7 @@ STL2_OPEN_NAMESPACE {
 
 	template <>
 	struct less_equal<void> {
-		template <typename T, typename U>
-			requires StrictTotallyOrderedWith<T, U>
+		template <class T, StrictTotallyOrderedWith<T> U>
 		constexpr decltype(auto) operator()(T&& t, U&& u) const {
 			return std::forward<T>(t) <= std::forward<U>(u);
 		}
