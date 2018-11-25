@@ -74,7 +74,7 @@ STL2_OPEN_NAMESPACE {
 		}
 
 		template <typename I, typename J>
-			requires Sentinel<I, J>
+		requires Sentinel<I, J>
 		constexpr bool iter_equal(I const &i, J const &j) {
 			return i == j;
 		}

@@ -203,7 +203,7 @@ STL2_OPEN_NAMESPACE {
 	constexpr bool is_nothrow_indirectly_movable_v = false;
 
 	template<class In, class Out>
-		requires IndirectlyMovable<In, Out>
+	requires IndirectlyMovable<In, Out>
 	constexpr bool is_nothrow_indirectly_movable_v<In, Out> =
 		noexcept(noexcept(declval<iter_reference_t<Out>>() = __stl2::iter_move(declval<In>())));
 
@@ -222,7 +222,7 @@ STL2_OPEN_NAMESPACE {
 	constexpr bool is_nothrow_indirectly_movable_storable_v = false;
 
 	template<class In, class Out>
-		requires IndirectlyMovableStorable<In, Out>
+	requires IndirectlyMovableStorable<In, Out>
 	constexpr bool is_nothrow_indirectly_movable_storable_v<In, Out> =
 		is_nothrow_indirectly_movable_v<In, Out> &&
 		is_nothrow_assignable<iter_reference_t<Out>, iter_value_t<In>>::value &&
@@ -335,7 +335,7 @@ STL2_OPEN_NAMESPACE {
 	constexpr bool is_nothrow_indirectly_swappable_v = false;
 
 	template<class R1, class R2>
-		requires IndirectlySwappable<R1, R2>
+	requires IndirectlySwappable<R1, R2>
 	constexpr bool is_nothrow_indirectly_swappable_v<R1, R2> =
 		noexcept(__stl2::iter_swap(declval<R1>(), declval<R2>())) &&
 		noexcept(__stl2::iter_swap(declval<R2>(), declval<R1>())) &&

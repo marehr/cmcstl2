@@ -39,7 +39,7 @@ STL2_OPEN_NAMESPACE {
 
 		struct construct_fn {
 			template <class T, class... Args>
-				requires Constructible<T, Args...>
+			requires Constructible<T, Args...>
 			void operator()(T& t, Args&&... args) const
 			noexcept(is_nothrow_constructible<T, Args...>::value)
 			{
