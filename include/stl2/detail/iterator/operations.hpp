@@ -37,7 +37,7 @@ STL2_OPEN_NAMESPACE {
 		}
 	}
 
-	template<Iterator I>
+	template <Iterator I>
 		// Pre: 0 <= n && [i,i+n)
 	constexpr void advance(I& i, iter_difference_t<I> n)
 	noexcept(noexcept(++std::declval<I&>()))
@@ -45,7 +45,7 @@ STL2_OPEN_NAMESPACE {
 		__advance::impl(i, n);
 	}
 
-	template<BidirectionalIterator I>
+	template <BidirectionalIterator I>
 		// Pre: 0 <= n ? [i,i+n) : [i+n,i)
 	constexpr void advance(I& i, iter_difference_t<I> n)
 	noexcept(noexcept(++std::declval<I&>(), --std::declval<I&>()))
@@ -60,7 +60,7 @@ STL2_OPEN_NAMESPACE {
 		}
 	}
 
-	template<RandomAccessIterator I>
+	template <RandomAccessIterator I>
 		// Pre: 0 <= n ? [i,i+n) : [i+n,i)
 	constexpr void advance(I& i, iter_difference_t<I> n)
 	STL2_NOEXCEPT_RETURN(
@@ -191,7 +191,7 @@ STL2_OPEN_NAMESPACE {
 	}
 
 	// next
-	template<Iterator I>
+	template <Iterator I>
 	constexpr I next(I x, iter_difference_t<I> n = 1)
 	STL2_NOEXCEPT_RETURN(
 		__stl2::advance(x, n),
@@ -217,14 +217,14 @@ STL2_OPEN_NAMESPACE {
 	)
 
 	// prev
-	template<BidirectionalIterator I>
+	template <BidirectionalIterator I>
 	constexpr I prev(I x, iter_difference_t<I> n = 1)
 	STL2_NOEXCEPT_RETURN(
 		__stl2::advance(x, -n),
 		x
 	)
 
-	template<BidirectionalIterator I>
+	template <BidirectionalIterator I>
 	constexpr I prev(I x, iter_difference_t<I> n, I bound)
 	STL2_NOEXCEPT_RETURN(
 		__stl2::advance(x, -n, std::move(bound)),

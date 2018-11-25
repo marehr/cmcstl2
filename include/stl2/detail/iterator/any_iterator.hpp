@@ -29,7 +29,7 @@ STL2_OPEN_NAMESPACE {
 		struct counted {
 			std::atomic<long> cnt{ 1 };
 		};
-		template<InputIterator I> struct shared_iterator : counted {
+		template <InputIterator I> struct shared_iterator : counted {
 			shared_iterator(I i) : it(std::move(i)) {}
 			I it;
 		};
@@ -151,12 +151,12 @@ STL2_OPEN_NAMESPACE {
 			iter_move_fn<RValueReference> (*exec_)(op, blob *, blob *) =
 				&uninit_noop<RValueReference>;
 
-			template<InputIterator I> cursor(I i, small_tag) {
+			template <InputIterator I> cursor(I i, small_tag) {
 				::new (static_cast<void *>(&data_.tiny)) I(std::move(i));
 				deref_ = &deref_small<Reference, I>;
 				exec_ = &exec_small<RValueReference, I>;
 			}
-			template<InputIterator I> cursor(I i, big_tag) {
+			template <InputIterator I> cursor(I i, big_tag) {
 				data_.big = new shared_iterator<I>(std::move(i));
 				deref_ = &deref_big<Reference, I>;
 				exec_ = &exec_big<RValueReference, I>;
@@ -187,7 +187,7 @@ STL2_OPEN_NAMESPACE {
 				using base_t = basic_mixin<cursor>;
 			public:
 				mixin() = default;
-				template<InputIterator I> explicit mixin(I i)
+				template <InputIterator I> explicit mixin(I i)
 				: base_t(cursor{std::move(i)})
 				{}
 				using base_t::base_t;
@@ -205,7 +205,7 @@ STL2_OPEN_NAMESPACE {
 			cursor(cursor const &that) {
 				copy_from(that);
 			}
-			template<InputIterator I> cursor(I i)
+			template <InputIterator I> cursor(I i)
 			: cursor{std::move(i), is_small<I>{}}
 			{}
 			cursor &operator=(cursor &&that) {

@@ -22,10 +22,10 @@
 #include <stl2/detail/iterator/concepts.hpp>
 
 STL2_OPEN_NAMESPACE {
-	template<Semiregular S> class move_sentinel;
+	template <Semiregular S> class move_sentinel;
 
 	namespace __move_iterator {
-		template<InputIterator I> class cursor;
+		template <InputIterator I> class cursor;
 
 		struct access {
 			template <_SpecializationOf<cursor> C>
@@ -38,7 +38,7 @@ STL2_OPEN_NAMESPACE {
 			}
 		};
 
-		template<InputIterator I>
+		template <InputIterator I>
 		class cursor {
 			friend access;
 			I current_{};
@@ -104,7 +104,7 @@ STL2_OPEN_NAMESPACE {
 			// BUGBUG doesn't correctly handle when decltype(current_++)
 			// is a reference.
 			using __postinc_t = std::decay_t<decltype(current_++)>;
-			template<Readable R>
+			template <Readable R>
 			struct __proxy {
 				using value_type = __stl2::iter_value_t<R>;
 				R __tmp;
@@ -141,7 +141,7 @@ STL2_OPEN_NAMESPACE {
 				current_ += n;
 			}
 
-			template<EqualityComparableWith<I> U>
+			template <EqualityComparableWith<I> U>
 			constexpr bool equal(const cursor<U>& that) const
 			STL2_NOEXCEPT_RETURN(
 				current_ == access::current(that)
@@ -183,7 +183,7 @@ STL2_OPEN_NAMESPACE {
 		};
 	}
 
-	template<InputIterator I>
+	template <InputIterator I>
 	using move_iterator = basic_iterator<__move_iterator::cursor<I>>;
 
 	template <class I>
@@ -228,7 +228,7 @@ STL2_OPEN_NAMESPACE {
 		move_iterator<__f<I>>{std::forward<I>(i)}
 	)
 
-	template<Semiregular S>
+	template <Semiregular S>
 	class move_sentinel : detail::ebo_box<S, move_sentinel<S>> {
 		friend __move_iterator::access;
 		using box_t = detail::ebo_box<S, move_sentinel<S>>;

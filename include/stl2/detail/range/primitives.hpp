@@ -25,13 +25,13 @@
 STL2_OPEN_NAMESPACE {
 	// enumerate
 	namespace ext {
-		template<Range R>
+		template <Range R>
 		constexpr auto enumerate(R&& r)
 		STL2_NOEXCEPT_RETURN(
 			__stl2::ext::enumerate(__stl2::begin(r), __stl2::end(r))
 		)
 
-		template<SizedRange R>
+		template <SizedRange R>
 		constexpr auto enumerate(R&& r)
 		STL2_NOEXCEPT_RETURN(
 			tagged_pair<tag::count(iter_difference_t<iterator_t<R>>),
@@ -42,7 +42,7 @@ STL2_OPEN_NAMESPACE {
 		)
 	}
 
-	template<Range R>
+	template <Range R>
 	constexpr iter_difference_t<iterator_t<R>> distance(R&& r)
 	noexcept(noexcept(__stl2::distance(__stl2::begin(r), __stl2::end(r))))
 	{
@@ -52,7 +52,7 @@ STL2_OPEN_NAMESPACE {
 		return n;
 	}
 
-	template<SizedRange R>
+	template <SizedRange R>
 	constexpr iter_difference_t<iterator_t<R>> distance(R&& r)
 	noexcept(noexcept(__stl2::size(r)))
 	{

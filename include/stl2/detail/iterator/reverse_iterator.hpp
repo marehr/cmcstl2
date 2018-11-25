@@ -25,7 +25,7 @@
 //
 STL2_OPEN_NAMESPACE {
 	namespace __reverse_iterator {
-		template<BidirectionalIterator I>
+		template <BidirectionalIterator I>
 		class cursor;
 
 		struct access {
@@ -35,7 +35,7 @@ STL2_OPEN_NAMESPACE {
 			}
 		};
 
-		template<BidirectionalIterator I>
+		template <BidirectionalIterator I>
 		class cursor {
 			friend access;
 			I current_{};
@@ -134,7 +134,7 @@ STL2_OPEN_NAMESPACE {
 		};
 	}
 
-	template<BidirectionalIterator I>
+	template <BidirectionalIterator I>
 	using reverse_iterator = basic_iterator<__reverse_iterator::cursor<I>>;
 
 	template <class I1, StrictTotallyOrderedWith<I1> I2>

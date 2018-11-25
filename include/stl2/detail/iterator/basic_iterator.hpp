@@ -328,7 +328,7 @@ STL2_OPEN_NAMESPACE {
 			using common_refs = meta::list<>;
 		};
 
-		template<cursor::Readable C>
+		template <cursor::Readable C>
 		struct cursor_traits<C> {
 			using value_t_ = cursor::value_type_t<C>;
 			using reference_t_ = cursor::reference_t<C>;
@@ -609,7 +609,7 @@ STL2_OPEN_NAMESPACE {
 		)
 	} // namespace basic_iterator_adl
 
-	template<cursor::Cursor C>
+	template <cursor::Cursor C>
 	class basic_iterator
 	: public mixin_t<C>
 	, detail::iterator_associated_types_base<C>

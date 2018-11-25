@@ -174,7 +174,7 @@ STL2_OPEN_NAMESPACE {
 		CommonReference<iter_rvalue_reference_t<I>&&, const iter_value_t<I>&>;
 
 	// A generally useful dependent type
-	template<Readable I>
+	template <Readable I>
 	using iter_common_reference_t =
 		common_reference_t<iter_reference_t<I>, iter_value_t<I>&>;
 
@@ -202,7 +202,7 @@ STL2_OPEN_NAMESPACE {
 	template <class In, class Out>
 	constexpr bool is_nothrow_indirectly_movable_v = false;
 
-	template<class In, class Out>
+	template <class In, class Out>
 	requires IndirectlyMovable<In, Out>
 	constexpr bool is_nothrow_indirectly_movable_v<In, Out> =
 		noexcept(noexcept(declval<iter_reference_t<Out>>() = __stl2::iter_move(declval<In>())));
@@ -221,7 +221,7 @@ STL2_OPEN_NAMESPACE {
 	template <class In, class Out>
 	constexpr bool is_nothrow_indirectly_movable_storable_v = false;
 
-	template<class In, class Out>
+	template <class In, class Out>
 	requires IndirectlyMovableStorable<In, Out>
 	constexpr bool is_nothrow_indirectly_movable_storable_v<In, Out> =
 		is_nothrow_indirectly_movable_v<In, Out> &&
@@ -334,7 +334,7 @@ STL2_OPEN_NAMESPACE {
 	template <class R1, class R2>
 	constexpr bool is_nothrow_indirectly_swappable_v = false;
 
-	template<class R1, class R2>
+	template <class R1, class R2>
 	requires IndirectlySwappable<R1, R2>
 	constexpr bool is_nothrow_indirectly_swappable_v<R1, R2> =
 		noexcept(__stl2::iter_swap(declval<R1>(), declval<R2>())) &&
