@@ -125,8 +125,7 @@ STL2_OPEN_NAMESPACE {
 			)
 
 			// Extension
-			template <typename U>
-				requires IndirectlySwappable<U, I>
+			template <IndirectlySwappable<I> U>
 			constexpr void indirect_swap(
 				const cursor<U>& that) const
 			STL2_NOEXCEPT_RETURN(

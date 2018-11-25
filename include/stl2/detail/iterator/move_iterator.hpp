@@ -179,10 +179,8 @@ STL2_OPEN_NAMESPACE {
 
 			// Extension
 
-			template <class U>
-				requires IndirectlySwappable<U, I>
-			constexpr void indirect_swap(
-				const cursor<U >& that) const
+			template <IndirectlySwappable<I> U>
+			constexpr void indirect_swap(const cursor<U>& that) const
 			STL2_NOEXCEPT_RETURN(
 				__stl2::iter_swap(current_, access::current(that))
 			)
