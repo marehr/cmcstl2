@@ -153,18 +153,16 @@ STL2_OPEN_NAMESPACE {
 				current_ == access::sentinel(that)
 			)
 
-			template <class U>
-				requires SizedSentinel<U, I>
+			template <SizedSentinel<I> S>
 			constexpr iter_difference_t<I>
-			distance_to(const cursor<U >& that) const
+			distance_to(const cursor<S>& that) const
 			STL2_NOEXCEPT_RETURN(
 				access::current(that) - current_
 			)
 
-			template <class U>
-				requires SizedSentinel<U, I>
+			template <SizedSentinel<I> S>
 			constexpr iter_difference_t<I>
-			distance_to(const move_sentinel<U >& that) const
+			distance_to(const move_sentinel<S>& that) const
 			STL2_NOEXCEPT_RETURN(
 				access::sentinel(that) - current_
 			)
