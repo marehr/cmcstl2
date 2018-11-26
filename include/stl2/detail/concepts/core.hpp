@@ -51,13 +51,13 @@ STL2_OPEN_NAMESPACE {
 	///////////////////////////////////////////////////////////////////////////
 	// Same
 	//
-// #if defined(__GNUC__)
-// 	template <class T, class U>
-// 	STL2_CONCEPT_KEYWORD _SameImpl = __is_same_as(T, U);
-// #else
+#if defined(__GNUC__) && !defined(__clang__)
+	template <class T, class U>
+	STL2_CONCEPT_KEYWORD _SameImpl = __is_same_as(T, U);
+#else
 	template <class T, class U>
 	STL2_CONCEPT_KEYWORD _SameImpl = std::is_same_v<T, U>;
-// #endif
+#endif
 	template <class T, class U>
 	STL2_CONCEPT_KEYWORD Same = _SameImpl<T, U> && _SameImpl<U, T>;
 
